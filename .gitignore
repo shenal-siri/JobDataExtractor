@@ -2,3 +2,4 @@ _local_only/
 __pycache__/
 .vscode/
 html_files/
+database.ini

@@ -1,0 +1,257 @@
+define("msg-spinmail/components/legal-text",["exports","@babel/runtime/helpers/esm/taggedTemplateLiteral","@babel/runtime/helpers/esm/initializerDefineProperty","@babel/runtime/helpers/esm/classCallCheck","@babel/runtime/helpers/esm/createClass","@babel/runtime/helpers/esm/assertThisInitialized","@babel/runtime/helpers/esm/get","@babel/runtime/helpers/esm/possibleConstructorReturn","@babel/runtime/helpers/esm/getPrototypeOf","@babel/runtime/helpers/esm/inherits","@babel/runtime/helpers/esm/defineProperty","@babel/runtime/helpers/esm/applyDecoratedDescriptor","@babel/runtime/helpers/esm/initializerWarningHelper","@ember-decorators/component","msg-spinmail/templates/components/legal-text","global-utils/utils/html-safe","msg-shared/utils/constants","global-utils/utils/is-browser","msg-data/utils/spinmail/sponsored-action-tracking"],function(e,t,n,a,s,i,r,l,o,m,c,p,u,d,f,g,b,h,y){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var v,_,T,k,E,x,C,L,O,P,S
+function R(){var e=(0,t.default)(["",""])
+R=function(){return e}
+return e}function M(){var e=(0,t.default)(["",""])
+M=function(){return e}
+return e}function A(e){return function(){var t,n=(0,o.default)(e)
+if((function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1
+if(Reflect.construct.sham)return!1
+if("function"==typeof Proxy)return!0
+try{Date.prototype.toString.call(Reflect.construct(Date,[],(function(){})))
+return!0}catch(e){return!1}})()){var a=(0,o.default)(this).constructor
+t=Reflect.construct(n,arguments,a)}else t=n.apply(this,arguments)
+return(0,l.default)(this,t)}}var G=b.default.SPONSORED_TRACKING.ACTIONS,N=(v=(0,d.layout)(f.default),_=(0,d.classNames)("msg-spinmail-thread__legal-container"),T=Ember.inject.service("tracking"),k=Ember.inject.service("store"),E=Ember.computed("legalText.customLegalText","legalText.advertiserLegalText").readOnly(),x=Ember.computed("legalText.staticLegalText","legalText.linkedInLegalText").readOnly(),C=Ember.computed("legalText.staticLegalText","legalText.linkedInLegalText").readOnly(),v(L=_(L=(O=(function(e){(0,m.default)(l,e)
+var t=A(l)
+function l(){var e;(0,a.default)(this,l)
+for(var s=arguments.length,r=new Array(s),o=0;o<s;o++)r[o]=arguments[o]
+e=t.call.apply(t,[this].concat(r));(0,n.default)((0,i.default)(e),"tracking",P,(0,i.default)(e));(0,n.default)((0,i.default)(e),"store",S,(0,i.default)(e));(0,c.default)((0,i.default)(e),"data-test-msg-spinmail-thread__legal-container",!0)
+return e}(0,s.default)(l,[{key:"didReceiveAttrs",value:function(){(0,r.default)((0,o.default)(l.prototype),"didReceiveAttrs",this).apply(this,arguments)
+this.currentConversationId!==this.conversationId&&Ember.setProperties(this,{currentConversationId:this.conversationId,isLegalTextExpanded:!1})}},{key:"click",value:function(e){var t=e.target,n=t.closest("a"),a=Ember.get(this,"legalText.clickTrackingUrl")
+if(n&&a){var s="customLegalTextTracking"===t.closest("[".concat("data-spinmail-trackingtype","]")).getAttribute("data-spinmail-trackingtype")?G.CUSTOM_LEGAL_TEXT_CLICK:G.STATIC_LEGAL_TEXT_CLICK
+y.default.fireAdvertiserTracking(this.store,a,s)}}},{key:"customLegalText",get:function(){return this.isSponsoredConversation?Ember.get(this,"legalText.advertiserLegalText"):!!Ember.get(this,"legalText.customLegalText")&&(0,g.default)(Ember.get(this,"legalText.customLegalText"))}},{key:"staticLegalText",get:function(){if(this.isSponsoredConversation)return Ember.get(this,"legalText.linkedInLegalText")
+var e=Ember.get(this,"legalText.staticLegalText"),t=jSecure.mk(M(),new jSecure.UnsafeString(e))
+return!!t&&(0,g.default)(t)}},{key:"truncatedLegalText",get:function(){var e=Ember.get(this,"legalText.staticLegalText")||Ember.get(this,"legalText.linkedInLegalText")
+if(h.default&&e){if(this.isSponsoredConversation)return e
+var t=jSecure.mk(R(),new jSecure.UnsafeString(e)),n=document.createElement("div")
+n.innerHTML=t
+var a=n.querySelector(".truncate")
+a?a.classList.remove("truncate"):a=n
+var s=a.innerHTML
+return!!s&&(0,g.default)(s)}return!1}}])
+return l})(Ember.Component),P=(0,p.default)(O.prototype,"tracking",[T],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),S=(0,p.default)(O.prototype,"store",[k],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),(0,p.default)(O.prototype,"customLegalText",[E],Object.getOwnPropertyDescriptor(O.prototype,"customLegalText"),O.prototype),(0,p.default)(O.prototype,"staticLegalText",[x],Object.getOwnPropertyDescriptor(O.prototype,"staticLegalText"),O.prototype),(0,p.default)(O.prototype,"truncatedLegalText",[C],Object.getOwnPropertyDescriptor(O.prototype,"truncatedLegalText"),O.prototype),O))||L)||L)
+e.default=N})
+define("msg-spinmail/components/spinmail-one-click-thank-you",["exports","@babel/runtime/helpers/esm/classCallCheck","@babel/runtime/helpers/esm/possibleConstructorReturn","@babel/runtime/helpers/esm/getPrototypeOf","@babel/runtime/helpers/esm/inherits","@ember-decorators/component","msg-spinmail/templates/components/spinmail-one-click-thank-you"],function(e,t,n,a,s,i,r){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var l
+function o(e){return function(){var t,s=(0,a.default)(e)
+if((function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1
+if(Reflect.construct.sham)return!1
+if("function"==typeof Proxy)return!0
+try{Date.prototype.toString.call(Reflect.construct(Date,[],(function(){})))
+return!0}catch(e){return!1}})()){var i=(0,a.default)(this).constructor
+t=Reflect.construct(s,arguments,i)}else t=s.apply(this,arguments)
+return(0,n.default)(this,t)}}var m=(0,i.layout)(r.default)(l=(function(e){(0,s.default)(a,e)
+var n=o(a)
+function a(){(0,t.default)(this,a)
+return n.apply(this,arguments)}return a})(Ember.Component))||l
+e.default=m})
+define("msg-spinmail/components/spinmail-reply-form",["exports","@babel/runtime/helpers/esm/initializerDefineProperty","@babel/runtime/helpers/esm/classCallCheck","@babel/runtime/helpers/esm/createClass","@babel/runtime/helpers/esm/assertThisInitialized","@babel/runtime/helpers/esm/get","@babel/runtime/helpers/esm/possibleConstructorReturn","@babel/runtime/helpers/esm/getPrototypeOf","@babel/runtime/helpers/esm/inherits","@babel/runtime/helpers/esm/defineProperty","@babel/runtime/helpers/esm/applyDecoratedDescriptor","@babel/runtime/helpers/esm/initializerWarningHelper","@ember-decorators/component","msg-shared/utils/constants","msg-spinmail/templates/components/spinmail-reply-form","fetch"],function(e,t,n,a,s,i,r,l,o,m,c,p,u,d,f,g){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var b,h,y,v,_,T,k,E,x,C
+function L(e){return function(){var t,n=(0,l.default)(e)
+if((function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1
+if(Reflect.construct.sham)return!1
+if("function"==typeof Proxy)return!0
+try{Date.prototype.toString.call(Reflect.construct(Date,[],(function(){})))
+return!0}catch(e){return!1}})()){var a=(0,l.default)(this).constructor
+t=Reflect.construct(n,arguments,a)}else t=n.apply(this,arguments)
+return(0,r.default)(this,t)}}var O=d.default.MESSAGE_TYPE.SPONSORED_INMAIL_REPLY,P=d.default.SPINMAIL,S=P.CUSTOM_CONTENT,R=P.LANDING_PAGE,M=P.TOUCHDOWN,A=(b=(0,u.layout)(f.default),h=Ember.inject.service("lix"),y=Ember.computed("isLeadGenFormSubmitted","isOneClickLeadGen").readOnly(),v=Ember.computed("".concat(S,".subContent.action")).readOnly(),_=Ember.computed.alias("".concat(S,".replyTo.miniProfile")).readOnly(),T=Ember._action,b(k=(E=(function(e){(0,o.default)(c,e)
+var r=L(c)
+function c(){var e;(0,n.default)(this,c)
+for(var a=arguments.length,i=new Array(a),l=0;l<a;l++)i[l]=arguments[l]
+e=r.call.apply(r,[this].concat(i));(0,m.default)((0,s.default)(e),"className","msg-spinmail-reply-form");(0,t.default)((0,s.default)(e),"lix",x,(0,s.default)(e));(0,m.default)((0,s.default)(e),"isLeadGenFormModalOpen",!1);(0,t.default)((0,s.default)(e),"spinmailReplyEntity",C,(0,s.default)(e))
+return e}(0,a.default)(c,[{key:"didReceiveAttrs",value:function(){(0,i.default)((0,l.default)(c.prototype),"didReceiveAttrs",this).apply(this,arguments)
+this._clearProperties()
+this._setCTADesignProperties()}},{key:"_clearProperties",value:function(){Ember.setProperties(this,{actionLinkClassName:null,actionTextClassName:null})}},{key:"_setCTADesignProperties",value:function(){this.isHeader&&Ember.setProperties(this,{actionLinkClassName:"artdeco-button",actionTextClassName:"msg-spinmail-reply-form__action-link-text-primary"})
+var e=Ember.get(this,"conversation.latestEvent.entityUrn")
+Ember.set(this,"showReply",!!this.spinmailReplyEntity&&!!e)
+Ember.set(this,"showCTAContainer",this.showCTAButton||this.showReply)
+this.showReply&&Ember.set(this,"spinmailReply",{extensionContentType:O,originEventUrn:e})}},{key:"_fireTracking",value:function(e){return!Ember.testing&&(0,g.default)(e)}},{key:"openOneClickLeadGenForm",value:function(){this.isOneClickLeadGen&&Ember.set(this,"isLeadGenFormModalOpen",!0)}},{key:"showOneClickModal",get:function(){return this.isOneClickLeadGen&&!this.isLeadGenFormSubmitted}},{key:"showCTAButton",get:function(){var e=Ember.get(this,"".concat(S,".spInmailType"))
+return this.actionText&&(this.actionURL||this.isOneClickLeadGen)&&(e===M||e===R)}}])
+return c})(Ember.Component),x=(0,c.default)(E.prototype,"lix",[h],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),(0,c.default)(E.prototype,"showOneClickModal",[y],Object.getOwnPropertyDescriptor(E.prototype,"showOneClickModal"),E.prototype),(0,c.default)(E.prototype,"showCTAButton",[v],Object.getOwnPropertyDescriptor(E.prototype,"showCTAButton"),E.prototype),C=(0,c.default)(E.prototype,"spinmailReplyEntity",[_],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),(0,c.default)(E.prototype,"openOneClickLeadGenForm",[T],Object.getOwnPropertyDescriptor(E.prototype,"openOneClickLeadGenForm"),E.prototype),E))||k)
+e.default=A})
+define("msg-spinmail/components/spinmail-thread",["exports","@babel/runtime/helpers/esm/initializerDefineProperty","@babel/runtime/helpers/esm/classCallCheck","@babel/runtime/helpers/esm/createClass","@babel/runtime/helpers/esm/assertThisInitialized","@babel/runtime/helpers/esm/get","@babel/runtime/helpers/esm/possibleConstructorReturn","@babel/runtime/helpers/esm/getPrototypeOf","@babel/runtime/helpers/esm/inherits","@babel/runtime/helpers/esm/defineProperty","@babel/runtime/helpers/esm/applyDecoratedDescriptor","@babel/runtime/helpers/esm/initializerWarningHelper","@ember-decorators/component","global-utils/utils/get-location","global-utils/utils/html-safe","msg-shared/utils/constants","ember-batcher","global-utils/utils/is-browser","msg-spinmail/templates/components/spinmail-thread","fetch"],function(e,t,n,a,s,i,r,l,o,m,c,p,u,d,f,g,b,h,y,v){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var _,T,k,E,x,C,L,O,P,S,R,M,A,G,N,w,D,j
+function I(e){return function(){var t,n=(0,l.default)(e)
+if((function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1
+if(Reflect.construct.sham)return!1
+if("function"==typeof Proxy)return!0
+try{Date.prototype.toString.call(Reflect.construct(Date,[],(function(){})))
+return!0}catch(e){return!1}})()){var a=(0,l.default)(this).constructor
+t=Reflect.construct(n,arguments,a)}else t=n.apply(this,arguments)
+return(0,r.default)(this,t)}}var z=g.default.THREAD_DETAIL_JUMP_TARGET,F=g.default.SPINMAIL,U=F.CUSTOM_CONTENT,B=F.ACTIONED,W=F.TOUCHDOWN,Y=g.default.SPINMAIL_I18N_KEYS.LEAD_GEN_FORM_THANKYOU_CTA,H=g.default.GHOST_TYPE,q=(_=(0,u.layout)(y.default),T=(0,u.classNames)("msg-spinmail-thread","display-flex","flex-column"),k=Ember.inject.service("i18n"),E=Ember.inject.service("msg-data@data-manager"),x=Ember.computed("".concat(U,".body")).readOnly(),C=Ember.computed.equal("".concat(U,".spInmailType"),W).readOnly(),L=Ember.computed.equal("".concat(U,".status"),B).readOnly(),O=Ember.computed.and("isOneClickLeadGen","isActioned").readOnly(),P=Ember.computed.equal("conversation.participants.firstObject.ghostType",H.COMPANY).readOnly(),S=Ember._action,_(R=T(R=(M=(function(e){(0,o.default)(c,e)
+var r=I(c)
+function c(){var e;(0,n.default)(this,c)
+for(var a=arguments.length,i=new Array(a),l=0;l<a;l++)i[l]=arguments[l]
+e=r.call.apply(r,[this].concat(i));(0,t.default)((0,s.default)(e),"i18n",A,(0,s.default)(e));(0,t.default)((0,s.default)(e),"msgDataManager",G,(0,s.default)(e));(0,m.default)((0,s.default)(e),"trackingType","actionTracking");(0,m.default)((0,s.default)(e),"rumComponentId","messaging/spinmail-thread");(0,t.default)((0,s.default)(e),"isOneClickLeadGen",N,(0,s.default)(e));(0,t.default)((0,s.default)(e),"isActioned",w,(0,s.default)(e));(0,t.default)((0,s.default)(e),"isLeadGenFormSubmitted",D,(0,s.default)(e));(0,t.default)((0,s.default)(e),"isCompanySender",j,(0,s.default)(e))
+return e}(0,a.default)(c,[{key:"init",value:function(){(0,i.default)((0,l.default)(c.prototype),"init",this).apply(this,arguments)
+Ember.setProperties(this,{_lastSeenConversationId:void 0})}},{key:"_setOneClickLeadGenProperties",value:function(){var e=Ember.get(this,"".concat(U,".subContent"))
+if(e){if(this.isOneClickLeadGen){var t=Ember.get(e,"leadGenForm")
+t?this.isLeadGenFormSubmitted?Ember.setProperties(this,{actionURL:jSecure.sanitizeUrl(Ember.get(t,"landingPage.url")),actionText:this._getLeadGenCtaText(Ember.get(t,"thankYouCTA")),leadTrackingParams:Ember.get(e,"leadTrackingParams"),trackingType:"actionTracking"}):Ember.setProperties(this,{trackingType:"leadGenFormOpenTracking",actionText:Ember.get(e,"callToActionLabel"),leadTrackingParams:Ember.get(e,"leadTrackingParams"),leadGenForm:t}):Ember.set(this,"isConversationValid",!1)}else{var n=Ember.get(e,"action")
+n&&Ember.set(this,"actionURL",jSecure.sanitizeUrl(n))
+Ember.setProperties(this,{actionText:Ember.get(e,"actionText"),trackingType:"actionTracking"})}}else Ember.set(this,"isConversationValid",!1)}},{key:"_getLeadGenCtaText",value:function(e){var t=Y[e]||Y.VISIT_COMPANY_WEBSITE
+return this.i18n.getMessageRenderer(y.default,t)()}},{key:"_fireTracking",value:function(e){return!Ember.testing&&(0,v.default)(e)}},{key:"click",value:function(e){var t=this,n=e.target.closest("a")
+if(n){var a=n.closest("[".concat("data-spinmail-trackingtype","]")).getAttribute("data-spinmail-trackingtype"),s=Ember.get(this,"trackingMap.".concat(a))
+"leadGenFormOpenTracking"===a&&e.preventDefault()
+if(s){var i=n.classList.contains("msg-spinmail-reply-form__action-link"),r="_blank"===n.getAttribute("target")
+if(i||r)this._fireTracking(s)
+else{e.preventDefault()
+Ember.run((function(){t._fireTracking(s).finally((function(){(0,d.default)().href=jSecure.sanitizeUrl(n.href)}))}))}}}}},{key:"didReceiveAttrs",value:function(){(0,i.default)((0,l.default)(c.prototype),"didReceiveAttrs",this).apply(this,arguments)
+this.trackingMap={openTracking:Ember.get(this,"".concat(U,".openTracking")),bodyTracking:Ember.get(this,"".concat(U,".bodyTracking")),actionTracking:Ember.get(this,"".concat(U,".subContent.actionTracking")),customLegalTextTracking:Ember.get(this,"".concat(U,".legalText.customLegalTextTracking")),staticLegalTextTracking:Ember.get(this,"".concat(U,".legalText.staticLegalTextTracking")),leadGenFormOpenTracking:Ember.get(this,"".concat(U,".subContent.leadGenFormOpenTracking"))}
+Ember.get(this,"trackingMap.openTracking")&&this._fireTracking(Ember.get(this,"trackingMap.openTracking"))
+Ember.set(this,"isConversationValid",!0)
+this._setOneClickLeadGenProperties()}},{key:"didRender",value:function(){var e=this;(0,i.default)((0,l.default)(c.prototype),"didRender",this).apply(this,arguments)
+var t=Ember.get(this,"conversation.id")
+this._shouldSetFocus(t)&&(0,b.mutateDOM)((function(){if(!e.isDestroying&&h.default){var t=e.element.querySelector(z)
+t&&document.activeElement!==t&&t.focus()}}))
+this._lastSeenConversationId=t}},{key:"onLeadGenFormSaved",value:function(e){var t=this
+e.then((function(){var e=Ember.get(t,"".concat(U,".subContent.leadGenForm"))
+Ember.get(e,"submitted")&&t.msgDataManager.markSpinmailActioned(t.conversation).then((function(){t.isDestroying||Ember.setProperties(t,{actionURL:jSecure.sanitizeUrl(Ember.get(e,"landingPage.url")),trackingType:"actionTracking",actionText:t._getLeadGenCtaText(Ember.get(e,"thankYouCTA"))})}))}))}},{key:"_shouldSetFocus",value:function(e){return!this._lastSeenConversationId||this._lastSeenConversationId!==e}},{key:"spinmailContent",get:function(){return(0,f.default)(Ember.get(this,"".concat(U,".body")))}}])
+return c})(Ember.Component),A=(0,c.default)(M.prototype,"i18n",[k],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),G=(0,c.default)(M.prototype,"msgDataManager",[E],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),(0,c.default)(M.prototype,"spinmailContent",[x],Object.getOwnPropertyDescriptor(M.prototype,"spinmailContent"),M.prototype),N=(0,c.default)(M.prototype,"isOneClickLeadGen",[C],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),w=(0,c.default)(M.prototype,"isActioned",[L],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),D=(0,c.default)(M.prototype,"isLeadGenFormSubmitted",[O],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),j=(0,c.default)(M.prototype,"isCompanySender",[P],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),(0,c.default)(M.prototype,"onLeadGenFormSaved",[S],Object.getOwnPropertyDescriptor(M.prototype,"onLeadGenFormSaved"),M.prototype),M))||R)||R)
+e.default=q})
+define("msg-spinmail/components/sponsored-conversation/event-listitem-advertiser-avatar",["exports","@babel/runtime/helpers/esm/initializerDefineProperty","@babel/runtime/helpers/esm/classCallCheck","@babel/runtime/helpers/esm/assertThisInitialized","@babel/runtime/helpers/esm/possibleConstructorReturn","@babel/runtime/helpers/esm/getPrototypeOf","@babel/runtime/helpers/esm/inherits","@babel/runtime/helpers/esm/defineProperty","@babel/runtime/helpers/esm/applyDecoratedDescriptor","@babel/runtime/helpers/esm/initializerWarningHelper","@ember-decorators/component","msg-spinmail/templates/components/sponsored-conversation/event-listitem-advertiser-avatar","msg-shared/utils/constants"],function(e,t,n,a,s,i,r,l,o,m,c,p,u){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var d,f,g,b,h
+function y(e){return function(){var t,n=(0,i.default)(e)
+if((function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1
+if(Reflect.construct.sham)return!1
+if("function"==typeof Proxy)return!0
+try{Date.prototype.toString.call(Reflect.construct(Date,[],(function(){})))
+return!0}catch(e){return!1}})()){var a=(0,i.default)(this).constructor
+t=Reflect.construct(n,arguments,a)}else t=n.apply(this,arguments)
+return(0,s.default)(this,t)}}var v=u.default.GHOST_TYPE,_=(d=(0,c.layout)(p.default),f=Ember.computed.equal("sender.ghostType",v.COMPANY).readOnly(),d(g=(b=(function(e){(0,r.default)(i,e)
+var s=y(i)
+function i(){var e;(0,n.default)(this,i)
+for(var r=arguments.length,l=new Array(r),o=0;o<r;o++)l[o]=arguments[o]
+e=s.call.apply(s,[this].concat(l));(0,t.default)((0,a.default)(e),"isCompanySender",h,(0,a.default)(e))
+return e}return i})(Ember.Component),h=(0,o.default)(b.prototype,"isCompanySender",[f],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),b))||g)
+e.default=_})
+define("msg-spinmail/components/sponsored-conversation/sponsored-message-actions",["exports","@babel/runtime/helpers/esm/classCallCheck","@babel/runtime/helpers/esm/assertThisInitialized","@babel/runtime/helpers/esm/possibleConstructorReturn","@babel/runtime/helpers/esm/getPrototypeOf","@babel/runtime/helpers/esm/inherits","@babel/runtime/helpers/esm/defineProperty","@ember-decorators/component","msg-spinmail/templates/components/sponsored-conversation/sponsored-message-actions"],function(e,t,n,a,s,i,r,l,o){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var m
+function c(e){return function(){var t,n=(0,s.default)(e)
+if((function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1
+if(Reflect.construct.sham)return!1
+if("function"==typeof Proxy)return!0
+try{Date.prototype.toString.call(Reflect.construct(Date,[],(function(){})))
+return!0}catch(e){return!1}})()){var i=(0,s.default)(this).constructor
+t=Reflect.construct(n,arguments,i)}else t=n.apply(this,arguments)
+return(0,a.default)(this,t)}}var p=(0,l.classNames)("msg-s-sponsored-message-actions","mb1")(m=(0,l.layout)(o.default)(m=(function(e){(0,i.default)(s,e)
+var a=c(s)
+function s(){var e;(0,t.default)(this,s)
+for(var i=arguments.length,l=new Array(i),o=0;o<i;o++)l[o]=arguments[o]
+e=a.call.apply(a,[this].concat(l));(0,r.default)((0,n.default)(e),"data-test-msg-s-sponsored-message-actions",!0)
+return e}return s})(Ember.Component))||m)||m
+e.default=p})
+define("msg-spinmail/components/sponsored-conversation/sponsored-message-option",["exports","@babel/runtime/helpers/esm/initializerDefineProperty","@babel/runtime/helpers/esm/classCallCheck","@babel/runtime/helpers/esm/createClass","@babel/runtime/helpers/esm/assertThisInitialized","@babel/runtime/helpers/esm/get","@babel/runtime/helpers/esm/possibleConstructorReturn","@babel/runtime/helpers/esm/getPrototypeOf","@babel/runtime/helpers/esm/inherits","@babel/runtime/helpers/esm/defineProperty","@babel/runtime/helpers/esm/applyDecoratedDescriptor","@babel/runtime/helpers/esm/initializerWarningHelper","@ember-decorators/component","msg-shared/utils/constants","msg-data/utils/spinmail/sponsored-action-tracking","global-utils/utils/logger","msg-data/utils/spinmail/sponsored-conversation-properties","msg-spinmail/templates/components/sponsored-conversation/sponsored-message-option"],function(e,t,n,a,s,i,r,l,o,m,c,p,u,d,f,g,b,h){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var y,v,_,T,k,E,x,C,L,O,P,S,R,M,A,G,N,w,D,j,I,z,F
+function U(e){return function(){var t,n=(0,l.default)(e)
+if((function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1
+if(Reflect.construct.sham)return!1
+if("function"==typeof Proxy)return!0
+try{Date.prototype.toString.call(Reflect.construct(Date,[],(function(){})))
+return!0}catch(e){return!1}})()){var a=(0,l.default)(this).constructor
+t=Reflect.construct(n,arguments,a)}else t=n.apply(this,arguments)
+return(0,r.default)(this,t)}}var B=d.default.MESSAGE_TYPE,W=d.default.SPONSORED_MESSAGE_OPTION_TYPES,Y=d.default.MESSAGE_BODY_RENDER_FORMAT.SYSTEM,H=d.default.SPONSORED_TRACKING.ACTIONS,q=d.default.LIX.ENABLE_REMOVE_SYSTEM_MESSAGES,K=(y=(0,u.layout)(h.default),v=(0,u.classNames)("mt2"),_=Ember.inject.service("i18n"),T=Ember.inject.service("jet"),k=Ember.inject.service("tracking"),E=Ember.inject.service("store"),x=Ember.inject.service("lix"),C=Ember.computed.equal("option.clickAction",W.REPLY).readOnly(),L=Ember.computed.equal("option.clickAction",W.EXTERNAL_WEBSITE).readOnly(),O=Ember.computed.equal("option.clickAction",W.LEAD_GENERATION).readOnly(),P=Ember.computed("option.advertiserUrl").readOnly(),S=Ember._action,R=Ember._action,y(M=v(M=(A=(function(e){(0,o.default)(c,e)
+var r=U(c)
+function c(){var e;(0,n.default)(this,c)
+for(var a=arguments.length,i=new Array(a),l=0;l<a;l++)i[l]=arguments[l]
+e=r.call.apply(r,[this].concat(i));(0,t.default)((0,s.default)(e),"i18n",G,(0,s.default)(e));(0,t.default)((0,s.default)(e),"jet",N,(0,s.default)(e));(0,t.default)((0,s.default)(e),"tracking",w,(0,s.default)(e));(0,t.default)((0,s.default)(e),"store",D,(0,s.default)(e));(0,t.default)((0,s.default)(e),"lix",j,(0,s.default)(e));(0,t.default)((0,s.default)(e),"isReply",I,(0,s.default)(e));(0,t.default)((0,s.default)(e),"isExternalWebsite",z,(0,s.default)(e));(0,t.default)((0,s.default)(e),"isLeadGeneration",F,(0,s.default)(e));(0,m.default)((0,s.default)(e),"isLeadGenFormModalOpen",!1)
+return e}(0,a.default)(c,[{key:"init",value:function(){(0,i.default)((0,l.default)(c.prototype),"init",this).call(this)
+Ember.set(this,"enableRemoveSystemMessages",this.lix.getTreatmentIsEnabled(q))}},{key:"_sendReplyMessage",value:function(e){var t=this,n={extensionContentType:B.SPONSORED_MESSAGE_REPLY,sponsoredMessageOptionUrn:Ember.get(e,"sponsoredMessageOptionUrn")},a={messageReplyType:B.SPONSORED_MESSAGE_REPLY,adapterOptions:{sponsoredMessageReplyExtension:n},conversation:this.conversation}
+if(this.enableRemoveSystemMessages||this.isReply)a.message=Ember.get(e,"optionText.text")
+else{a.messageBodyRenderFormat=Y
+a.message=this._getI18NMessageBody("i18n_sponsored_message_system_reply",escape(Ember.get(e,"optionText.text")))
+try{a.message=unescape(a.message)}catch(s){(0,g.errorLogger)(this.jet,"Failed to decode option text with error: ".concat(s.message),s,["msg-custom-err-log","conversation-ad"])
+a.message=this._getI18NMessageBody("i18n_sponsored_message_system_reply",Ember.get(e,"optionText.text"))}}this.saveSponsoredMessageReply(a).catch((function(e){(0,g.errorLogger)(t.jet,"Sponsored Message Reply failed with error: ".concat(e.message),e,["msg-custom-err-log","conversation-ad"])
+throw e}))}},{key:"_getI18NMessageBody",value:function(e,t){return this.i18n.getMessageRenderer(h.default,e)([{optionText:t}])}},{key:"performOptionClickAction",value:function(){var e=H.SIMPLE_REPLY,t={sponsoredConvoId:Ember.get(this.sponsoredConversationMetadata,"sponsoredConversationTrackingId"),sponsoredMessageContentId:this.sponsoredMessageTrackingId,optionClickedIndex:this.optionIndex}
+if(this.isLeadGeneration){e=H.LEAD_FORM_OPEN
+var n=Ember.get(this,"option.leadTrackingParams")
+if(n){var a=(0,b.addNodeLevelTrackingParams)(this.jet,n,t)
+Ember.set(this,"leadTrackingParamsWithNodeTracking",a)}Ember.set(this,"isLeadGenFormModalOpen",!0)}else{this.isExternalWebsite&&(e=H.CTA_CLICK)
+this._sendReplyMessage(this.option)}t.action=e
+f.default.fireNodeLevelAdvertiserTracking(this.store,this.jet,Ember.getWithDefault(this.sponsoredConversationMetadata,"clickTrackingUrl",""),t)}},{key:"notifyLeadGenFormSubmitted",value:function(e){var t=this
+e.then((function(){t._sendReplyMessage(t.option)}))}},{key:"externalWebsiteUrl",get:function(){var e=Ember.getWithDefault(this,"option.advertiserUrl","")
+return e?jSecure.sanitizeUrl(e):e}}])
+return c})(Ember.Component),G=(0,c.default)(A.prototype,"i18n",[_],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),N=(0,c.default)(A.prototype,"jet",[T],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),w=(0,c.default)(A.prototype,"tracking",[k],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),D=(0,c.default)(A.prototype,"store",[E],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),j=(0,c.default)(A.prototype,"lix",[x],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),I=(0,c.default)(A.prototype,"isReply",[C],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),z=(0,c.default)(A.prototype,"isExternalWebsite",[L],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),F=(0,c.default)(A.prototype,"isLeadGeneration",[O],{configurable:!0,enumerable:!0,writable:!0,initializer:null}),(0,c.default)(A.prototype,"externalWebsiteUrl",[P],Object.getOwnPropertyDescriptor(A.prototype,"externalWebsiteUrl"),A.prototype),(0,c.default)(A.prototype,"performOptionClickAction",[S],Object.getOwnPropertyDescriptor(A.prototype,"performOptionClickAction"),A.prototype),(0,c.default)(A.prototype,"notifyLeadGenFormSubmitted",[R],Object.getOwnPropertyDescriptor(A.prototype,"notifyLeadGenFormSubmitted"),A.prototype),A))||M)||M)
+e.default=K})
+define("msg-spinmail/config/environment",["exports"],function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var t
+try{var n=document.querySelector('meta[name="msg-spinmail/config/environment"]').getAttribute("content")
+t=JSON.parse(unescape(n))}catch(s){t={}}var a=t
+e.default=a})
+define.alias("ember-cli-pemberly-i18n/helpers/bidi-dir","msg-spinmail/helpers/bidi-dir")
+define.alias("ember-cli-pemberly-i18n/helpers/format-currency","msg-spinmail/helpers/format-currency")
+define.alias("ember-cli-pemberly-i18n/helpers/format-date","msg-spinmail/helpers/format-date")
+define.alias("ember-cli-pemberly-i18n/helpers/format-name","msg-spinmail/helpers/format-name")
+define.alias("ember-cli-pemberly-i18n/helpers/format-number","msg-spinmail/helpers/format-number")
+define.alias("ember-cli-pemberly-i18n/helpers/format-time","msg-spinmail/helpers/format-time")
+define.alias("ember-cli-pemberly-i18n/helpers/format-truncate","msg-spinmail/helpers/format-truncate")
+define.alias("ember-cli-pemberly-i18n/helpers/is-any-locale","msg-spinmail/helpers/is-any-locale")
+define.alias("ember-cli-pemberly-i18n/helpers/is-cjk-language","msg-spinmail/helpers/is-cjk-language")
+define.alias("ember-cli-pemberly-i18n/helpers/is-rtl-content","msg-spinmail/helpers/is-rtl-content")
+define.alias("ember-cli-pemberly-i18n/helpers/is-rtl-language","msg-spinmail/helpers/is-rtl-language")
+define.alias("ember-cli-pemberly-i18n/helpers/t-link-to","msg-spinmail/helpers/t-link-to")
+define.alias("ember-cli-pemberly-i18n/helpers/t-make-name","msg-spinmail/helpers/t-make-name")
+define.alias("ember-cli-pemberly-i18n/helpers/t","msg-spinmail/helpers/t")
+define.alias("ember-cli-pemberly-i18n/initializers/i18n","msg-spinmail/initializers/i18n")
+define("msg-spinmail/instance-initializers/-t-link-to",["exports","ember-stdlib/utils/is-browser"],function(e,t){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.initialize=n
+e.default=void 0
+function n(e){t.default&&e.lookup("service:-t-link-to")}var a={name:"-t-link-to",initialize:n}
+e.default=a})
+define.alias("ember-cli-pemberly-i18n/services/-t-link-to","msg-spinmail/services/-t-link-to")
+define.alias("ember-cli-pemberly-i18n/services/formatter","msg-spinmail/services/formatter")
+define.alias("ember-cli-pemberly-i18n/services/i18n","msg-spinmail/services/i18n")
+define.alias("ember-cli-pemberly-i18n/services/locale","msg-spinmail/services/locale")
+define("msg-spinmail/templates/components/legal-text",["exports"],function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var t=Ember.HTMLBars.template({id:"6o5bjOQR",block:'{"symbols":[],"statements":[[7,"div",true],[10,"class","msg-spinmail-thread__legal-text-content"],[8],[0,"\\n"],[4,"if",[[23,0,["isLegalTextExpanded"]]],null,{"statements":[[0,"    "],[7,"div",true],[10,"class","flex-1"],[8],[0,"\\n"],[4,"if",[[23,0,["staticLegalText"]]],null,{"statements":[[0,"        "],[7,"div",true],[10,"class","msg-spinmail-thread__legal-text msg-spinmail-thread__legal-text--static"],[10,"data-spinmail-trackingtype","staticLegalTextTracking"],[8],[0,"\\n"],[4,"if",[[23,0,["isSponsoredConversation"]]],null,{"statements":[[0,"            "],[1,[28,"artdeco-icons-web@li-icon",null,[["type","class"],["adchoices-icon","msg-spinmail-thread__legal-text-ad-choices-icon"]]],false],[0,"\\n            "],[7,"span",true],[10,"class","msg-spinmail-thread__static-legal-content"],[8],[0,"\\n              "],[1,[28,"text-view-model@text-view-model",[[23,0,["staticLegalText"]]],null],false],[0,"\\n            "],[9],[0,"\\n"]],"parameters":[]},{"statements":[[0,"            "],[1,[23,0,["staticLegalText"]],false],[0,"\\n"]],"parameters":[]}],[0,"        "],[9],[0,"\\n"]],"parameters":[]},null],[0,"\\n"],[4,"if",[[23,0,["customLegalText"]]],null,{"statements":[[0,"        "],[7,"div",true],[10,"class","msg-spinmail-thread__legal-text msg-spinmail-thread__legal-text--custom"],[10,"data-spinmail-trackingtype","customLegalTextTracking"],[8],[0,"\\n"],[4,"if",[[23,0,["isSponsoredConversation"]]],null,{"statements":[[0,"            "],[1,[28,"text-view-model@text-view-model",[[23,0,["customLegalText"]]],null],false],[0,"\\n"]],"parameters":[]},{"statements":[[0,"            "],[1,[23,0,["customLegalText"]],false],[0,"\\n"]],"parameters":[]}],[0,"        "],[9],[0,"\\n"]],"parameters":[]},null],[0,"    "],[9],[0,"\\n"]],"parameters":[]},{"statements":[[4,"if",[[23,0,["truncatedLegalText"]]],null,{"statements":[[0,"    "],[7,"div",true],[10,"class","msg-spinmail-thread__legal-text msg-spinmail-thread__legal-text--static truncated t-12 flex-1 display-flex"],[10,"data-spinmail-trackingtype","staticLegalTextTracking"],[8],[0,"\\n"],[4,"if",[[23,0,["isSponsoredConversation"]]],null,{"statements":[[0,"        "],[1,[28,"artdeco-icons-web@li-icon",null,[["type","class"],["adchoices-icon","msg-spinmail-thread__legal-text-ad-choices-icon"]]],false],[0,"\\n        "],[7,"span",true],[10,"class","msg-spinmail-thread__truncated-legal-content"],[8],[0,"\\n          "],[1,[28,"text-view-model@text-view-model",[[23,0,["truncatedLegalText"]]],null],false],[0,"\\n        "],[9],[0,"\\n"]],"parameters":[]},{"statements":[[0,"        "],[7,"span",true],[10,"class","msg-spinmail-thread__truncated-legal-content"],[8],[0,"\\n          "],[1,[23,0,["truncatedLegalText"]],false],[0,"\\n        "],[9],[0,"\\n"]],"parameters":[]}],[0,"    "],[9],[0,"\\n  "]],"parameters":[]},null]],"parameters":[]}],[0,"  "],[1,[28,"artdeco-button@artdeco-button",null,[["aria-label","circle","class","color","controlType","icon","type","data-control-name","click","size"],[[28,"t",[[28,"if",[[23,0,["isLegalTextExpanded"]],"i18n_collapse_legal_text","i18n_expand_legal_text"],null],"msg-spinmail/templates/components/legal-text"],null],true,"msg-spinmail-thread__legal-text-expand","muted","button",[28,"if",[[23,0,["isLegalTextExpanded"]],"chevron-down-icon","chevron-up-icon"],null],"tertiary",[28,"concat",[[23,0,["actionTrackingPrefix"]],[28,"if",[[23,0,["isLegalTextExpanded"]],"collapse_spinmail_legal","expand_spinmail_legal"],null]],null],[28,"action",[[23,0,[]],[28,"mut",[[23,0,["isLegalTextExpanded"]]],null],[28,"not",[[23,0,["isLegalTextExpanded"]]],null]],null],1]]],false],[0,"\\n"],[9]],"hasEval":false}',meta:{moduleName:"msg-spinmail/templates/components/legal-text.hbs"}})
+e.default=t})
+define("msg-spinmail/templates/components/spinmail-one-click-thank-you",["exports"],function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var t=Ember.HTMLBars.template({id:"OZkfoLSZ",block:'{"symbols":[],"statements":[[4,"if",[[23,0,["isLeadGenFormSubmitted"]]],null,{"statements":[[0,"  "],[7,"div",true],[10,"class","msg-spinmail-one-click-thank-you__container container mv5"],[8],[0,"\\n    "],[7,"div",true],[10,"class","msg-spinmail-one-click-thank-you__title mb3"],[8],[0,"\\n      "],[1,[28,"artdeco-icons-web@li-icon",null,[["type","animate","a11y-text","class"],["success-pebble-icon",true,[28,"t",["i18n_success","msg-spinmail/templates/components/spinmail-one-click-thank-you"],null],"msg-spinmail-one-click-thank-you__success v-align-middle"]]],false],[0,"\\n      "],[7,"span",true],[10,"class","msg-spinmail-one-click-thank-you__title-text v-align-middle t-16 t-black t-bold"],[8],[0,"\\n        "],[1,[28,"t",["i18n_spinmail_one_click_thank_you_title","msg-spinmail/templates/components/spinmail-one-click-thank-you"],[["companyName"],[[23,0,["spinmail","subContent","leadGenForm","actor","miniCompany","name"]]]]],false],[0,"\\n      "],[9],[0,"\\n    "],[9],[0,"\\n    "],[5,"rich-text@attributed-text",[],[["@attributedText"],[[23,0,["spinmail","subContent","leadGenForm","thankYouMessage"]]]]],[0,"\\n  "],[9],[0,"\\n"]],"parameters":[]},null]],"hasEval":false}',meta:{moduleName:"msg-spinmail/templates/components/spinmail-one-click-thank-you.hbs"}})
+e.default=t})
+define("msg-spinmail/templates/components/spinmail-reply-form",["exports"],function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var t=Ember.HTMLBars.template({id:"u7NizqYh",block:'{"symbols":["assetLoader"],"statements":[[4,"if",[[23,0,["showCTAContainer"]]],null,{"statements":[[0,"  "],[7,"div",true],[10,"class","msg-spinmail-reply-form"],[8],[0,"\\n"],[4,"if",[[23,0,["showReply"]]],null,{"statements":[[0,"      "],[5,"message-button@message-button",[],[["@buttonClasses","@classNames","@recipient","@controlName","@msgAdapterOptions","@recipientDistance","@placeholderText"],["artdeco-button artdeco-button--secondary","inline-block",[23,0,["spinmailReplyEntity"]],"spinmail_reply",[23,0,["spinmailReply"]],"DISTANCE_1",[28,"t",["i18n_spinmail_placeholder_text","msg-spinmail/templates/components/spinmail-reply-form"],[["sender","subject"],[[23,0,["conversation","participantNames","firstObject"]],[23,0,["conversation","latestEvent","eventContent","subject"]]]]]]],{"statements":[[0,"\\n        "],[1,[28,"t",["i18n_reply","msg-spinmail/templates/components/spinmail-reply-form"],null],false],[0,"\\n      "]],"parameters":[]}],[0,"\\n"]],"parameters":[]},null],[4,"if",[[23,0,["showCTAButton"]]],null,{"statements":[[0,"      "],[7,"a",true],[11,"href",[23,0,["actionURL"]]],[11,"data-spinmail-trackingtype",[23,0,["trackingType"]]],[11,"class",[29,["msg-spinmail-reply-form__action-link ",[23,0,["actionLinkClassName"]]]]],[10,"target","_blank"],[10,"rel","noopener noreferrer"],[11,"onclick",[28,"action",[[23,0,[]],"openOneClickLeadGenForm"],null]],[8],[0,"\\n        "],[7,"span",true],[11,"class",[23,0,["actionTextClassName"]]],[8],[0,"\\n          "],[1,[23,0,["actionText"]],false],[0,"\\n        "],[9],[0,"\\n\\n"],[4,"unless",[[23,0,["isHeader"]]],null,{"statements":[[0,"          "],[7,"span",true],[10,"class","msg-spinmail-reply-form__action-link-arrow v-align-middle"],[8],[0,"\\n            "],[1,[28,"artdeco-icons-web@li-icon",null,[["type","size"],["arrow-right-icon","small"]]],false],[0,"\\n          "],[9],[0,"\\n"]],"parameters":[]},null],[0,"      "],[9],[0,"\\n"]],"parameters":[]},null],[0,"  "],[9],[0,"\\n"]],"parameters":[]},null],[0,"\\n"],[4,"if",[[23,0,["showOneClickModal"]]],null,{"statements":[[0,"  "],[5,"asset-loader@deferred-asset-loader",[],[["@bundle"],["feed-shared"]],{"statements":[[0,"\\n"],[4,"if",[[23,1,["state","fulfilled"]]],null,{"statements":[[0,"      "],[5,"feed-shared@lead-gen/lead-gen-modal",[],[["@isOpen","@leadGenForm","@leadTrackingParams","@closeModal"],[[23,0,["isLeadGenFormModalOpen"]],[23,0,["conversation","latestEvent","eventContent","customContent","subContent","leadGenForm"]],[23,0,["conversation","latestEvent","eventContent","customContent","subContent","leadTrackingParams"]],[23,0,["closeModal"]]]]],[0,"\\n"]],"parameters":[]},null],[0,"  "]],"parameters":[1]}],[0,"\\n"]],"parameters":[]},null]],"hasEval":false}',meta:{moduleName:"msg-spinmail/templates/components/spinmail-reply-form.hbs"}})
+e.default=t})
+define("msg-spinmail/templates/components/spinmail-thread",["exports"],function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var t=Ember.HTMLBars.template({id:"SZxFkQJB",block:'{"symbols":[],"statements":[[4,"if",[[23,0,["isConversationValid"]]],null,{"statements":[[0,"  "],[7,"div",true],[10,"class","msg-spinmail-thread__top-banner display-flex justify-space-between pv2 ph3"],[8],[0,"\\n    "],[7,"div",true],[10,"class","display-flex"],[8],[0,"\\n      "],[7,"p",true],[10,"class","t-12 t-black--light t-normal"],[8],[0,"\\n        "],[1,[28,"if",[[23,0,["conversation","latestEvent","eventContent","customContent","advertiserLabel"]],[23,0,["conversation","latestEvent","eventContent","customContent","advertiserLabel"]],[28,"t",["i18n_sponsored","msg-spinmail/templates/components/spinmail-thread"],null]],null],false],[0,"\\n      "],[9],[0,"\\n    "],[9],[0,"\\n    "],[7,"time",true],[10,"class","white-space-nowrap pl3 t-12 t-black--light t-normal"],[8],[0,"\\n      "],[1,[28,"ember-cli-pemberly-i18n@format-date",[[23,0,["conversation","oldestEvent","createdAt"]]],[["format","useTimeZone"],["fmt_md_medium",true]]],false],[0,"\\n    "],[9],[0,"\\n  "],[9],[0,"\\n\\n  "],[7,"div",true],[10,"class","msg-spinmail-thread__message-header p3"],[8],[0,"\\n    "],[7,"h3",true],[10,"class","msg-spinmail-thread__message-subject mb3 t-14 t-black t-bold"],[8],[0,"\\n      "],[1,[23,0,["conversation","latestEvent","eventContent","subject"]],false],[0,"\\n    "],[9],[0,"\\n    "],[5,"msg-spinmail@spinmail-reply-form",[],[["@conversation","@messageButtonComponent","@trackingType","@actionText","@actionURL","@isActioned","@isOneClickLeadGen","@isLeadGenFormSubmitted","@actionTrackingPrefix","@closeModal","@isHeader"],[[23,0,["conversation"]],[23,0,["messageButtonComponent"]],[23,0,["trackingType"]],[23,0,["actionText"]],[23,0,["actionURL"]],[23,0,["isActioned"]],[23,0,["isOneClickLeadGen"]],[23,0,["isLeadGenFormSubmitted"]],[23,0,["actionTrackingPrefix"]],[28,"action",[[23,0,[]],"onLeadGenFormSaved"],null],true]]],[0,"\\n  "],[9],[0,"\\n  "],[7,"div",true],[10,"class","msg-spinmail-thread__message ph4"],[10,"data-spinmail-trackingtype","bodyTracking"],[8],[0,"\\n    "],[7,"div",true],[10,"class","msg-spinmail-thread__message-body-container mt2 relative"],[8],[0,"\\n"],[4,"if",[[23,0,["isCompanySenderCompanyPageUrlEnabled"]]],null,{"statements":[[0,"        "],[5,"ember-engines@link-to-external",[],[["@route","@model","@class"],["companies.company",[28,"global-helpers@urn-to-id",[[23,0,["conversation","participants","firstObject","miniCompany","entityUrn"]]],null],"msg-entity-lockup__entity-title"]],{"statements":[[0,"\\n          "],[5,"ember-vector-images@lazy-background",[],[["@disableLazyLoad","@image","@alt","@title","@class","@ghostType","@desiredWidth"],[true,[23,0,["conversation","latestEvent","from","picture"]],[28,"t",["i18n_spinmail_company_name","msg-spinmail/templates/components/spinmail-thread"],[["names"],[[23,0,["conversation","participantNames"]]]]],[28,"t",["i18n_spinmail_company_name","msg-spinmail/templates/components/spinmail-thread"],[["names"],[[23,0,["conversation","participantNames"]]]]],"EntityPhoto-square-2 msg-s-event-listitem__profile-picture",[23,0,["conversation","participants","firstObject","ghostType"]],40]]],[0,"\\n          "],[7,"div",true],[11,"class",[28,"concat",["msg-spinmail-thread__name t-14 t-black t-bold hoverable-link-text"],null]],[8],[0,"\\n            "],[1,[28,"t",["i18n_spinmail_company_name","msg-spinmail/templates/components/spinmail-thread"],[["names"],[[23,0,["conversation","participantNames"]]]]],false],[0,"\\n          "],[9],[0,"\\n        "]],"parameters":[]}],[0,"\\n"]],"parameters":[]},{"statements":[[0,"        "],[5,"ember-vector-images@lazy-background",[],[["@disableLazyLoad","@image","@alt","@title","@class","@ghostType","@desiredWidth"],[true,[23,0,["conversation","latestEvent","from","picture"]],[28,"t",["i18n_spinmail_company_name","msg-spinmail/templates/components/spinmail-thread"],[["names"],[[23,0,["conversation","participantNames"]]]]],[28,"t",["i18n_spinmail_company_name","msg-spinmail/templates/components/spinmail-thread"],[["names"],[[23,0,["conversation","participantNames"]]]]],[28,"concat",["msg-s-event-listitem__profile-picture ",[28,"if",[[23,0,["isCompanySender"]],"EntityPhoto-square-2","EntityPhoto-circle-2"],null]],null],[23,0,["conversation","participants","firstObject","ghostType"]],40]]],[0,"\\n        "],[7,"div",true],[11,"class",[28,"concat",["msg-spinmail-thread__name t-14 t-black t-bold"],null]],[8],[0,"\\n          "],[1,[28,"t",["i18n_spinmail_company_name","msg-spinmail/templates/components/spinmail-thread"],[["names"],[[23,0,["conversation","participantNames"]]]]],false],[0,"\\n        "],[9],[0,"\\n"]],"parameters":[]}],[0,"      "],[7,"p",true],[10,"class","msg-spinmail-thread__message-body t-14 t-black t-normal"],[8],[0,"\\n        "],[1,[23,0,["spinmailContent"]],false],[0,"\\n      "],[9],[0,"\\n      "],[5,"msg-spinmail@spinmail-reply-form",[],[["@conversation","@trackingType","@actionText","@actionURL","@isActioned","@isOneClickLeadGen","@isLeadGenFormSubmitted","@actionTrackingPrefix","@closeModal"],[[23,0,["conversation"]],[23,0,["trackingType"]],[23,0,["actionText"]],[23,0,["actionURL"]],[23,0,["isActioned"]],[23,0,["isOneClickLeadGen"]],[23,0,["isLeadGenFormSubmitted"]],[23,0,["actionTrackingPrefix"]],[28,"action",[[23,0,[]],"onLeadGenFormSaved"],null]]]],[0,"\\n    "],[9],[0,"\\n    "],[5,"msg-spinmail@legal-text",[],[["@classNames","@legalText","@conversationId","@actionTrackingPrefix"],["mt5",[23,0,["conversation","latestEvent","eventContent","customContent","legalText"]],[23,0,["conversation","id"]],[23,0,["actionTrackingPrefix"]]]]],[0,"\\n\\n    "],[5,"msg-spinmail@spinmail-one-click-thank-you",[],[["@spinmail","@isLeadGenFormSubmitted"],[[23,0,["conversation","latestEvent","eventContent","customContent"]],[23,0,["isLeadGenFormSubmitted"]]]]],[0,"\\n  "],[9],[0,"\\n"],[4,"if",[[23,0,["conversation","blocked"]]],null,{"statements":[[0,"    "],[5,"msg-ui-base@conversation-unspam",[],[["@conversation","@redirectToActiveConversation"],[[23,0,["conversation"]],[23,0,["redirectToActiveConversation"]]]]],[0,"\\n"]],"parameters":[]},null]],"parameters":[]},{"statements":[[0,"  "],[5,"artdeco-empty-state@artdeco-empty-state",[],[["@illustration","@headline","@message"],["sad-browser",[28,"t",["conversation_not_available","msg-spinmail/templates/components/spinmail-thread"],null],[28,"t",["conversation_not_available_explanation","msg-spinmail/templates/components/spinmail-thread"],null]]]],[0,"\\n"]],"parameters":[]}]],"hasEval":false}',meta:{moduleName:"msg-spinmail/templates/components/spinmail-thread.hbs"}})
+e.default=t})
+define("msg-spinmail/templates/components/sponsored-conversation/event-listitem-advertiser-avatar",["exports"],function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var t=Ember.HTMLBars.template({id:"/5Rr61KX",block:'{"symbols":["@sender"],"statements":[[4,"if",[[23,0,["isCompanySenderCompanyPageUrlEnabled"]]],null,{"statements":[[0,"  "],[5,"ember-engines@link-to-external",[],[["@route","@model"],["companies.company",[28,"global-helpers@urn-to-id",[[23,1,["miniCompany","entityUrn"]]],null]]],{"statements":[[0,"\\n    "],[5,"ember-vector-images@lazy-background",[],[["@image","@alt","@title","@class","@ghostType","@desiredWidth"],[[23,1,["picture"]],[23,1,["fullName"]],[23,1,["fullName"]],"msg-s-event-listitem__advertiser-profile-picture EntityPhoto-square-2",[23,1,["ghostType"]],40]]],[0,"\\n  "]],"parameters":[]}],[0,"\\n"]],"parameters":[]},{"statements":[[0,"  "],[5,"ember-vector-images@lazy-image",[],[["@image","@alt","@title","@class","@ghostType","@desiredWidth"],[[23,1,["picture"]],[23,1,["fullName"]],[23,1,["fullName"]],[28,"concat",["msg-s-event-listitem__advertiser-profile-picture ",[28,"if",[[23,0,["isCompanySender"]],"EntityPhoto-square-2","EntityPhoto-circle-2"],null]],null],[23,1,["ghostType"]],40]]],[0,"\\n"]],"parameters":[]}]],"hasEval":false}',meta:{moduleName:"msg-spinmail/templates/components/sponsored-conversation/event-listitem-advertiser-avatar.hbs"}})
+e.default=t})
+define("msg-spinmail/templates/components/sponsored-conversation/sponsored-message-actions",["exports"],function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var t=Ember.HTMLBars.template({id:"3BT6BkTY",block:'{"symbols":["sponsoredMessageOption","optionIndex"],"statements":[[4,"if",[[23,0,["customContent"]]],null,{"statements":[[4,"each",[[23,0,["customContent","sponsoredMessageOptions"]]],null,{"statements":[[0,"    "],[5,"msg-spinmail@sponsored-conversation/sponsored-message-option",[],[["@option","@optionIndex","@sponsoredMessageTrackingId","@sponsoredConversationMetadata","@conversation","@saveSponsoredMessageReply","@classNames"],[[23,1,[]],[23,2,[]],[23,0,["customContent","sponsoredMessageTrackingId"]],[23,0,["conversation","sponsoredConversationMetadata"]],[23,0,["conversation"]],[23,0,["saveSponsoredMessageReply"]],"sponsored-message-actions__option"]]],[0,"\\n"]],"parameters":[1,2]},null]],"parameters":[]},null]],"hasEval":false}',meta:{moduleName:"msg-spinmail/templates/components/sponsored-conversation/sponsored-message-actions.hbs"}})
+e.default=t})
+define("msg-spinmail/templates/components/sponsored-conversation/sponsored-message-option",["exports"],function(e){"use strict"
+Object.defineProperty(e,"__esModule",{value:!0})
+e.default=void 0
+var t=Ember.HTMLBars.template({id:"YakZos6Z",block:'{"symbols":["assetLoader","@option"],"statements":[[4,"if",[[23,0,["isExternalWebsite"]]],null,{"statements":[[0,"  "],[5,"ember-cli-pemberly-tracking@shared/external-link",[[12,"data-control-name","sponsored_message_external_link"]],[["@href","@class","@target","@onclick"],[[23,0,["externalWebsiteUrl"]],"msg-s-sponsored-message-option__external-website-link msg-s-sponsored-message-option__button artdeco-button artdeco-button--secondary artdeco-button--2","_blank",[28,"action",[[23,0,[]],[23,0,["performOptionClickAction"]]],null]]],{"statements":[[0,"\\n    "],[7,"span",true],[10,"class","msg-s-sponsored-message-option__external-icon"],[8],[0,"\\n      "],[1,[28,"artdeco-icons-web@li-icon",null,[["type","size","a11y-text"],["link-external-icon","small",[28,"t",["a11y_external_link","msg-spinmail/templates/components/sponsored-conversation/sponsored-message-option"],null]]]],false],[0,"\\n    "],[9],[0,"\\n    "],[1,[23,2,["optionText","text"]],false],[0,"\\n  "]],"parameters":[]}],[0,"\\n"]],"parameters":[]},{"statements":[[0,"  "],[5,"artdeco-button@artdeco-button",[],[["@class","@type","@size","@controlType","@click"],["msg-s-sponsored-message-option__button","secondary","2","button",[28,"action",[[23,0,[]],[23,0,["performOptionClickAction"]]],null]]],{"statements":[[0,"\\n"],[4,"if",[[23,0,["isLeadGeneration"]]],null,{"statements":[[0,"      "],[7,"span",true],[10,"class","msg-s-sponsored-message-option__external-icon"],[8],[0,"\\n        "],[1,[28,"artdeco-icons-web@li-icon",null,[["type","size","a11y-text"],["clipboard-icon","small",[28,"t",["a11y_lead_gen_form","msg-spinmail/templates/components/sponsored-conversation/sponsored-message-option"],null]]]],false],[0,"\\n      "],[9],[0,"\\n"]],"parameters":[]},null],[0,"\\n    "],[1,[23,2,["optionText","text"]],false],[0,"\\n  "]],"parameters":[]}],[0,"\\n"]],"parameters":[]}],[0,"\\n"],[4,"if",[[23,0,["isLeadGeneration"]]],null,{"statements":[[0,"  "],[5,"asset-loader@deferred-asset-loader",[],[["@bundle"],["feed-shared"]],{"statements":[[0,"\\n"],[4,"if",[[23,1,["state","fulfilled"]]],null,{"statements":[[0,"      "],[5,"feed-shared@lead-gen/lead-gen-modal",[],[["@isOpen","@leadGenForm","@leadTrackingParams","@closeModal"],[[23,0,["isLeadGenFormModalOpen"]],[23,2,["leadGenForm"]],[23,0,["leadTrackingParamsWithNodeTracking"]],[28,"action",[[23,0,[]],[23,0,["notifyLeadGenFormSubmitted"]]],null]]]],[0,"\\n"]],"parameters":[]},null],[0,"  "]],"parameters":[1]}],[0,"\\n"]],"parameters":[]},null]],"hasEval":false}',meta:{moduleName:"msg-spinmail/templates/components/sponsored-conversation/sponsored-message-option.hbs"}})
+e.default=t})
+
+//# sourceMappingURL=engine.map

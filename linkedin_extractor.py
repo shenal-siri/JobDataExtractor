@@ -146,4 +146,3 @@ print(status)
 
 # Close connection to database
 PGHandler.connection.close()
-

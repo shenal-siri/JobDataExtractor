@@ -21,28 +21,32 @@ Since `linkedin_extractor.py` stores data in a PostgreSQL database, the initial 
 2) Creating a PostgreSQL database and setting up its schema.
 3) Setting database connection parameters.
 
-#### 1) Cloning / Downloading this Repo
+#### 1. Cloning / Downloading this Repo
 Self-explanatory, just click here:
 
 ![GitHub - Clone / Download Repo](/resources/git_clone.PNG "GitHub - Clone / Download Repo")
 
-#### 2) Creating a PostgreSQL database and setting up its schema
+Don't forget to set up your Python env using `requirements.txt`!
+
+#### 2. Creating a PostgreSQL database and setting up its schema
 I recommend [pgAdmin 4](https://www.pgadmin.org/download/) for hassle-free, GUI-based Postgres database creation and management. Once you've created a database for the tool, you can use pgAdmin's 'Query Tool' to open and run `DDL_job_data.sql`, which will create the requisite tables / relationships / functions.
 
 ![pgAdmin 4 - Query Tool](/resources/pgAdmin_1.PNG "pgAdmin 4 - Query Tool")
+
 ![pgAdmin 4 - Loading DDL file](/resources/pgAdmin_2.PNG "pgAdmin 4 - Loading DDL file")
+
 ![pgAdmin 4 - Building Schema](/resources/pgAdmin_3.PNG "pgAdmin 4 - Building Schema")
 
 The database schema / ERD is summarized below:
 
 ![Database ERD](/resources/ERD_job_data.png "Database ERD")
 
-#### 3) Setting database connection parameters.
+#### 3. Setting database connection parameters.
 Copy the `database.ini` file found in the `resources` folder to the top level directory. Edit the `password` and `database` fields to those of the database you have created.
 
 ## Done! Now how do I use this tool?
 
-#### 1) Manually download HTML for LinkedIn job postings you wish to store.
+#### 1. Manually download HTML for LinkedIn job postings you wish to store.
 Create a folder in the top level directory (default name is `html_files`). 
 
 When you find a LinkedIn job posting you wish to parse, right-click anywhere on the webpage and click "Save as.."
@@ -53,7 +57,7 @@ Save the HTML to the `html_files` directory. Be sure to select "Webpage, Complet
 
 ![Saving a LinkedIn job posting](/resources/LinkedIn_save_2.PNG "Saving a LinkedIn job posting")
 
-#### 2) Run `linkedin_extractor.py`
+#### 2. Run `linkedin_extractor.py`
 
 This will extract the job posting data from all HTML files currently in the `html_files` directory, and commit it to the PostgreSQL database (if it is not already in the database). The script can also be configured to delete the local files after parsing.
 

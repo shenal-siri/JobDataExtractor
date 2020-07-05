@@ -64,16 +64,16 @@ This will extract the job posting data from all HTML files currently in the `htm
 ## Caveats
 - *This tool isn't meant to be a bulk job posting scraper*. The idea was to create a rudimentary pipeline to store data on jobs I would be manually applying to anyways.
 
-- *This tool is a work-in-progress*. As such, it might not be properly refactored or fully bug-tested, but I will try to keep the `main` branch as clean as possible.
+- *This tool is a work-in-progress*. As such, it might not be properly refactored or fully bug-tested, but I will try to keep the `master` branch as clean as possible.
 
 
 
 ## Future Work
 - Scraping data's no fun unless you use it! We can load our data into a `pandas` dataframe and go to town on extracting some valuable insights (For example: Which skills are most commonly requested in job postings?) **- Priority: High**
 
-- Some sort of rudimentary GUI to handle running the tool / marking jobs as 'rejected' / deleting jobs would be nice. **- Priority: Medium**
+- Wrapping this up into a rudimentary web app (or even custom Chrome Extension) would be an interesting foray into basic web development **- Priority: Medium**
 
-- This just stores data on jobs I apply to. Can this be expanded to a suite of different tools which make the overall job application process easier? (Eg: Auto-filling applications on company web portals? Setting up notifications for companies I actively wish to apply to?) **- Priority: Medium**
+- This tool only stores data on jobs I apply to. Can this be expanded to a suite of different tools which make the overall job application process easier? (Eg: Auto-filling applications on company web portals? Setting up notifications for companies I actively wish to apply to?) **- Priority: Low**
 
 - LinkedIn is just one of many job posting aggregators, how about other common options (Indeed, Glassdoor, Monster etc)? **- Priority: Low**
 

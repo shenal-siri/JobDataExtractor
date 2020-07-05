@@ -6,8 +6,8 @@ CREATE TABLE job (
     title varchar NOT NULL,
     company varchar NOT NULL,
     location varchar NOT NULL,
-    seniority varchar NOT NULL,
-    employment_type varchar NOT NULL,
+    seniority varchar,
+    employment_type varchar,
     time_add timestamptz DEFAULT now(),
     posting_text text NOT NULL,
     rejected boolean DEFAULT false,
@@ -35,6 +35,14 @@ CREATE TABLE job_function(
     function_id int REFERENCES function(id) ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT job_function_pkey PRIMARY KEY (job_id, function_id)
 );
+
+
+/* Initialize NULL rows in 'industry' and 'function tables */
+INSERT INTO industry (name)
+VALUES (NULL);
+
+INSERT INTO function (name)
+VALUES (NULL);
 
 
 /* Create trigger function to update 'time_reject' for the 'job' table when updated */

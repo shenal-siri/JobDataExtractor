@@ -128,18 +128,26 @@ class PGHandler:
                         pkey = sql.SQL(",").join(sql.Identifier(n) for n in junc_ids),
                         )
                         
-                        # Loop through each industry / function item
-                        for value in values:
-                            
-                            # Insert industry / function item into database
-                            cur.execute(query_insert[table], (value,))
+                        # Check if industry / function item is None
+                        if values is None:
+
+                            # Directly add to the appropriate junction table using the default 'NULL' row
+                            # (i.e, industry_id = 1 / function_id = 1; see DDL_job_data.sql)
+                            cur.execute(query_insert['job_'+table], (job_id, 1))
                         
-                            # Get auto-assigned industry_id / function_id from database
-                            cur.execute(query_select[table], (value,))
-                            current_id = cur.fetchone()[0]
+                        else:
+                            # Loop through each industry / function item
+                            for value in values:
+                                
+                                # Insert industry / function item into database
+                                cur.execute(query_insert[table], (value,))
                             
-                            # Insert new row to job_industry / job_function junction tables
-                            cur.execute(query_insert['job_'+table], (job_id, current_id))
+                                # Get auto-assigned industry_id / function_id from database
+                                cur.execute(query_select[table], (value,))
+                                current_id = cur.fetchone()[0]
+                                
+                                # Insert new row to job_industry / job_function junction tables
+                                cur.execute(query_insert['job_'+table], (job_id, current_id))
                             
         #print("Transaction Completed Successfully!")
         return True

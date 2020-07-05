@@ -46,8 +46,6 @@ class JobData:
         Output: self.data dict populated with relevant job data
         """
         # Read in the target HTML file
-        #current_file_path = os.path.join(foldername, filename)
-        #print(current_file_path)
         with open(self.filepath, 'r', encoding='utf-8') as rf:
             html_corpus = rf.read()
 
@@ -61,28 +59,42 @@ class JobData:
         self.data['url'] = comments[0][22:].strip()
         self.data['id'] = comments[0][-12:-2].strip()
 
-        # Extract all tags inside the main article tag
-        article_tags = soup.find('article').find_all('div')
+        # Find the div tag inside the main article tag which contatins the job posting text
+        posting_text_tag = soup.find('article').find_all('div', {'id': 'job-details'})
+        
+        # Extract job posting text from the tag
+        self.data['posting_text']  = self.process_text(posting_text_tag[0].get_text(separator=' '), 
+                                                       return_as_string=True)
+        
+        
+        # Find the div tags inside the main article tag which contatins additional job details
+        detail_tags = soup.find('article').find_all("div", {"class": "jobs-box__group"})
+        
+        # Parse through each tag and store data in an auxiliary dict
+        detail_dict = dict.fromkeys(['Seniority Level', 'Industry', 'Employment Type', 'Job Functions'])
+        
+        for tag in detail_tags:
+            detail_list = self.process_text(tag.get_text(separator=' '), return_as_string=False)
+            # Determine if extracted header corresponds to one of the detail categories we care about
+            if detail_list[0] in detail_dict.keys():
+                detail_dict[detail_list[0]] = detail_list[1:]
 
-        """Reference for data extracted from div tags inside article tag:
-        div tag  1: Main article text
-        div tag -4: "Seniority Level"
-        div tag -3: "Industries"
-        div tag -2: "Employment Type"
-        div tag -1: "Job Functions"
-        """
-        # Preprocess and extract relevant data from the respective tags
-        self.data['posting_text']    = self.process_text(article_tags[1].get_text(separator=' '), 
-                                                         return_as_string=True)
-        self.data['seniority']       = self.process_text(article_tags[-4].get_text(separator=' '), 
-                                                         ignore_first=True, return_as_string=True)
-        self.data['industries']      = self.process_text(article_tags[-3].get_text(separator=' '), 
-                                                         ignore_first=True)
-        self.data['employment_type'] = self.process_text(article_tags[-2].get_text(separator=' '), 
-                                                         ignore_first=True, return_as_string=True)
-        self.data['functions']       = self.process_text(article_tags[-1].get_text(separator=' '), 
-                                                         ignore_first=True)
-
+        # Preprocess and extract relevant data from their respective tags
+        self.data['industries'] = detail_dict['Industry']
+        self.data['functions'] = detail_dict['Job Functions']
+        
+        # Try/Except block needed to handle None if no Seniority or Employment Type in job description
+        try:
+            self.data['seniority'] = detail_dict['Seniority Level'][0]        # pylint: disable=unsubscriptable-object
+        except TypeError:
+            self.data['seniority'] = None
+        
+        try:
+            self.data['employment_type'] = detail_dict['Employment Type'][0]  # pylint: disable=unsubscriptable-object
+        except TypeError:
+            self.data['employment_type'] = None
+        
+        
         # Extract all div tags from the main soup object
         tags_all = soup.find_all('div')
 
@@ -110,4 +122,5 @@ class JobData:
         self.data = dict.fromkeys(fields)
     
         
-        
+### TODO
+

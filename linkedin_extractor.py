@@ -11,6 +11,7 @@ from postgres_handler import PGHandler
 
 # Location where HTML files + resources are stored:
 HTML_DIR = 'html_files'
+#HTML_DIR = os.path.join('html_files', '_test') # For test / debug
 # Do you want these files to be deleted by the script after successful extraction to database?
 DELETE_HTML_FILES = False
 

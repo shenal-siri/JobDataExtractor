@@ -1,8 +1,8 @@
 # Reference matrial: https://www.psycopg.org/docs/sql.html
-
 import sys
+# Psycopg2
 import psycopg2
-from psycopg2 import sql
+from psycopg2 import Error, sql
 from postgres_config import pg_config
 
 class PGHandler:

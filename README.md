@@ -22,11 +22,10 @@ Since `linkedin_extractor.py` stores data in a PostgreSQL database, the initial 
 3) Setting database connection parameters.
 
 #### 1. Cloning / Downloading this Repo
-Self-explanatory, just click here:
+Self-explanatory, see the image below. Don't forget to set up your Python env using `requirements.txt`!
 
 ![GitHub - Clone / Download Repo](/resources/git_clone.PNG "GitHub - Clone / Download Repo")
 
-Don't forget to set up your Python env using `requirements.txt`!
 
 #### 2. Creating a PostgreSQL database and setting up its schema
 I recommend [pgAdmin 4](https://www.pgadmin.org/download/) for hassle-free, GUI-based Postgres database creation and management. Once you've created a database for the tool, you can use pgAdmin's 'Query Tool' to open and run `DDL_job_data.sql`, which will create the requisite tables / relationships / functions.

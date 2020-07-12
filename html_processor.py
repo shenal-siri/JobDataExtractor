@@ -43,7 +43,7 @@ class JobData:
     def extract_job_data(self, filename, foldername):
         """
         Input:  Filepath to a LinkedIn HTML job posting
-        Output: self.data dict populated with relevant job data
+        Output: self.data dict populated with relevant job data (as Strings or lists of Strings)
         """
         # Read in the target HTML file
         with open(self.filepath, 'r', encoding='utf-8') as rf:
@@ -63,11 +63,11 @@ class JobData:
         posting_text_tag = soup.find('article').find_all('div', {'id': 'job-details'})
         
         # Extract job posting text from the tag
-        self.data['posting_text']  = self.process_text(posting_text_tag[0].get_text(separator=' '), 
-                                                       return_as_string=True)
+        self.data['posting_text'] = self.process_text(posting_text_tag[0].get_text(separator=' '), 
+                                                      return_as_string=True)
         
         
-        # Find the div tags inside the main article tag which contatins additional job details
+        # Find the div tags inside the main article tag which contain the additional job details
         detail_tags = soup.find('article').find_all("div", {"class": "jobs-box__group"})
         
         # Parse through each tag and store data in an auxiliary dict

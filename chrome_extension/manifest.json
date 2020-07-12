@@ -1,0 +1,15 @@
+{
+    "manifest_version": 2,
+    "name": "Job Data Extractor",
+    "version": "1.0.0",
+    "description": "Extracts HTML of the current open LinkedIn job posting",
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_title": "Extracts HTML of the current open LinkedIn job posting"
+    },
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+    }],
+    "permissions": ["tabs"]
+}

@@ -14,7 +14,7 @@ class JobData:
     # NOTE: 'rejected' boolean field is not extracted and defaults to 'false' when committing
     # a job to the db (see DDL_job_data.sql)
     DATA_FIELDS = ['id', 'url', 'title', 'company', 'location', 'seniority', 
-                       'industries', 'employment_type', 'functions', 'posting_text']
+                   'industries', 'employment_type', 'functions', 'posting_text']
     
     def __init__(self, fields=DATA_FIELDS):
         self.data = dict.fromkeys(fields)

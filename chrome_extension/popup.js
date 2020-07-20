@@ -1,16 +1,26 @@
-// Wire up the button in popup.html to the appropriate function
+// Wire up the buttons in popup.html to the appropriate functions
 document.addEventListener("DOMContentLoaded", function(event) {
-    var getDOMButton = document.getElementById("getDOM");
-    getDOMButton.onclick = function() { getDOM(); }
+    document.getElementById('ok_btn').addEventListener('click', function() { 
+        var inputJobID = document.getElementById('job_id_input')
+        startGET(inputJobID.value);
+        // console.log("input value is : " + inputJobID.value);
+        // alert("The entered data is : " + inputJobID.value);
+    });
 });
 
-// Regex-pattern to check URLs against. 
-// It matches URLs like: http[s]://[...]linkedin.com/jobs/view/[...]
+document.addEventListener("DOMContentLoaded", function(event) {
+    var getPageButton = document.getElementById("extractWebpage");
+    getPageButton.onclick = function() { startExtract(); }
+});
+
+// Regex pattern to check URLs against
+// Matches URLs like: http[s]://[...]linkedin.com/jobs/view/[...]
 var urlRegex = /^https?:\/\/(?:[^.\/?#]+\.)?linkedin\.com\/jobs\/view\//;
 
 
-// Send a message (intended for the content script)
-function getDOM(){
+// Send a message containing the current tab's job id to the content script
+// No callback - this message kickstarts the eventual POST request to the server
+function startExtract(){
     // Need to send message with the id of the currently active tab
     chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
 
@@ -21,7 +31,7 @@ function getDOM(){
             var split_url = tab[0].url.split("/", 6);
             var current_id = split_url[split_url.length - 1]
 
-            chrome.tabs.sendMessage(tab[0].id, {instruction: 'sendMeTheDOM', job_id: current_id}, processDOM);
+            chrome.tabs.sendMessage(tab[0].id, {instruction: 'startPostRequest', job_id: current_id} );
         
         } else {
             chrome.tabs.sendMessage(tab[0].id, {instruction: 'alertWrongPage'} ); 
@@ -29,8 +39,24 @@ function getDOM(){
     });
 }
 
-// The callback function (runs using the message received from the content script)
-function processDOM(DOM) {
-    console.log('I received the following:\nJob ID: ' + DOM.job_id + '\nDOM Content:\n'+  DOM.HTML);
+// Send a message containing the entered job id for retrieval by the server
+// No callback - this message kickstarts the eventual GET request to the server
+function startGET(current_id) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
+        chrome.tabs.sendMessage(tab[0].id, {instruction: 'startGetRequest', job_id: current_id} );
+    });
 }
 
+
+
+/*
+Current implementation:
+
+popup.html:     "extractWebpage" click  ->
+popup.js:       startExtract()          ->
+popup.js:       'startPOSTRequest'      -> 
+content.js:     'POST'                  -> 
+background.js:  fetchFromServer()       -> 
+background.js:  'SUCCESS'/'FAILURE'     ->
+content.js:     alertComplete()      
+*/

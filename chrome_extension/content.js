@@ -1,15 +1,84 @@
 // Listen for messages
 chrome.runtime.onMessage.addListener(
     function (msg, sender, sendResponse) {
-    // If the received message has the expected format...
+    // Raise an alert to notify the user of an incorrect page
     if (msg.instruction === 'alertWrongPage') {
-        // Raise an alert to notify the user of an incorrect page
         alert("Invalid webpage! Your open webpage must be a LinkedIn job posting.\n" +
               "Hint: URL should begin with 'https://www.linkedin.com/jobs/view'");
     }
-    if (msg.instruction === 'sendMeTheDOM') {
-        // Send response to the popup.js callback, passing the web-page's DOM content as argument
-        sendResponse({ HTML: document.all[0].outerHTML, job_id: msg.job_id });
-        alert("Job posting data successfully extracted!");
+    if (msg.instruction === 'startPostRequest') {
+        // Send a message containing the webpage's HTML to the background script for POST to server
+        // Has a callback - user alert message
+        var webpageDOM = document.all[0].outerHTML
+        chrome.runtime.sendMessage({instruction: 'POST', id: msg.job_id, HTML: webpageDOM}, alertComplete);
+    }
+    if (msg.instruction === 'startGetRequest') {
+        // Send a message containing the user-entered job id to the background script for GET from server
+        // Has a callback - user alert message
+        chrome.runtime.sendMessage({instruction: 'GET', id: msg.job_id}, alertComplete);
     }
 });
+
+
+// Display alert message to user on successful/failed request to server
+function alertComplete(status) {
+    let alertText = ''
+
+    if (status.status === 'SUCCESS'){
+        switch(status.instruction){
+            case 'POST':
+                alertText += " extracted to server.";
+                break;
+            case 'GET':
+                alertText += " retrieved from server.";
+                break;
+        }
+        alert("Success! Job posting " + status.id + alertText);
+    }
+
+    if (status.status === 'FAILURE'){
+        switch(status.instruction){
+            case 'POST':
+                alertText += " could not be sent to server.";
+                break;
+            case 'GET':
+                alertText += " could not be retrieved from server.";
+                break;
+        }
+        alert("Error! Job posting " + status.id + alertText + " Details below:\n" + status.error_msg);
+    }
+
+    // switch(status.instruction) {
+
+    //     case "POST":
+    //         if (status.status === 'SUCCESS'){
+    //             alertText += " extracted to server."
+    //             alert("Success! Job posting " + status.id + " extracted to server.");
+    //         }
+    //         if (status.status === 'FAILURE'){
+    //             alertText += " could not be sent to server."
+    //             alert("Error! Job posting " + status.id + " could not be sent to server. Details below:\n" 
+    //                   + status.error_msg);
+    //         }
+    //         break;
+
+    //     case "GET":
+    //         if (status.status === 'SUCCESS'){
+    //             alert("Success! Job posting " + status.id + " retrieved from server.");
+    //         }
+    //         if (status.status === 'FAILURE'){
+    //             alert("Error! Job posting " + status.id + " could not be retrieved from server. Details below:\n" 
+    //                   + status.error_msg);
+    //         }
+    //         break;
+    // }
+
+
+    // if (status.status === 'SUCCESS'){
+    //     alert("Success! Job posting " + status.id + " received by server.");
+    // }
+    // if (status.status === 'FAILURE'){
+    //     alert("Error! Job posting " + status.id + " could not be received by server. Details below:\n" 
+    //           + status.error_msg);
+    // }
+}

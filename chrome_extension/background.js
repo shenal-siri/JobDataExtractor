@@ -53,7 +53,6 @@ function fetchFromServer(request, message, sendResponse) {
         // Read in the response as JSON
         return response.json();
         })
-
         // OK - Output response and trigger callback to content.js
         .then(function(responseAsJson) {
         console.log(responseAsJson);
@@ -63,7 +62,6 @@ function fetchFromServer(request, message, sendResponse) {
             id: responseAsJson.job.id 
         });
         })
-
         // BAD - Output error and trigger callback to content.js
         .catch(function(error) {
         console.log('Looks like there was a problem: \n', error);

@@ -1,9 +1,25 @@
+# Flask
 from flask import Flask, request, abort
 from flask_restful import Api, Resource, reqparse, fields, marshal
+# Utility 
+import os
+import shutil
+import sys
+from collections import defaultdict
+# Custom modules
 from html_processor import JobData
+from postgres_handler import PGHandler
+
+# Define custom errors before initializing the app
+errors = {
+    'JobAlreadyExistsError': {
+        'message': "A job with that id already exists in the database.",
+        'status': 409,
+    }
+}
 
 app = Flask(__name__)
-api = Api(app)
+api = Api(app, errors=errors)
 
 # Define the fields to be yielded during GET requests
 job_fields = {
@@ -20,22 +36,6 @@ job_fields = {
     'uri': fields.Url('job')
 }
 
-# Stand-in data store of 'job' objects to test API (pending database implementation)
-jobs = [
-    {
-        'id': 1,
-        'url': "test url",
-        'title': "test title",
-        'company': "test company",
-        'location': "test location",
-        'seniority': "test seniority",
-        'employment_type': "test employment type",
-        'industries': ["test industry 1", "test industry 2"],
-        'functions': ["test function 1", "test function 2", "test function 3"],
-        'posting_text': "test job posting text, description and information"
-    }
-]
-
 
 class JobListAPI(Resource):
     
@@ -51,7 +51,7 @@ class JobListAPI(Resource):
         super(JobListAPI, self).__init__()
 
     def post(self):
-        # Assign the id and HTML received from the Chrome Extension into a ata object
+        # Assign the id and HTML received from the Chrome Extension into a JobData object
         args = self.reqparse.parse_args()
         job_args = {
             'id': args['id'],
@@ -62,9 +62,19 @@ class JobListAPI(Resource):
         # Have the JobData object extract the relevant data fields from the raw HTML
         current_job.extract_job_data()
         
-        # Add the JobData object data to our temporary data store
-        jobs.append(current_job.data)
-        return {'job': marshal(current_job.data, job_fields)}, 201
+        # Initialize connection to Postgres database
+        # NOTE: Connection parameters must be specified in the 'database.ini' file
+        PGHandler.init_connection()
+        
+        # Commit extracted data to the Postgres database and return HTML code
+        if PGHandler.insert_job(current_job.data):
+            return {'job': marshal(current_job.data, job_fields)}, 201
+        else:
+            return {'job': marshal(current_job.data, job_fields)}, 409
+        
+        
+        # Close connection to database
+        PGHandler.connection.close()
 
 
 class JobAPI(Resource):
@@ -75,15 +85,30 @@ class JobAPI(Resource):
         self.reqparse.add_argument('id', type=int, required=True,
                                    help='No job id provided',
                                    location='json')
-        self.reqparse.add_argument('HTML', type=str, location='json')
+        #self.reqparse.add_argument('HTML', type=str, location='json')
         super(JobAPI, self).__init__()    
         
+        
     def get(self, id):
-        job = [job for job in jobs if job['id'] == id]
-        if len(job) == 0:
-            abort(404)
-        return {'job': marshal(job[0], job_fields)}
-    
+        
+        # Initialize connection to Postgres database
+        # NOTE: Connection parameters must be specified in the 'database.ini' file
+        PGHandler.init_connection()
+        
+        # Select data for the specific job id from the Postgres database and store to appropriate dict
+        selected_job = PGHandler.select_job(id)
+        
+        if selected_job == "Connection Failed":
+            return 504
+        elif selected_job is None:
+            return {"Job not found in database!"}, 404
+        else:
+            return {'job': marshal(selected_job, job_fields)}, 200
+        
+        
+        # Close connection to database
+        PGHandler.connection.close()
+        
 
 api.add_resource(JobListAPI, '/jobdataextractor/api/v1.0/jobs/', endpoint = 'jobs')
 api.add_resource(JobAPI, '/jobdataextractor/api/v1.0/jobs/<int:id>', endpoint = 'job')
@@ -91,4 +116,7 @@ api.add_resource(JobAPI, '/jobdataextractor/api/v1.0/jobs/<int:id>', endpoint = 
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
+
+# TODO:
+# Implement connection pooling
+# Implement GET functionality for all jobs

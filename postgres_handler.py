@@ -2,6 +2,7 @@
 import sys
 # Psycopg2
 import psycopg2
+import psycopg2.extras
 from psycopg2 import Error, sql
 from postgres_config import pg_config
 
@@ -37,6 +38,26 @@ class PGHandler:
     UPDATE {table}
     SET {field} = ({value})
     WHERE {field_where} = ({value_where});
+    """
+    
+    text_select_all_data_query = """
+    SELECT job.*, sub_f.functions, sub_i.industries 
+    FROM job
+    INNER JOIN
+        (SELECT job_function.job_id, array_agg(function.name) as functions
+        FROM job_function
+        INNER JOIN function
+        ON function.id = job_function.function_id
+        GROUP BY job_function.job_id) sub_f
+    ON job.id = sub_f.job_id
+    INNER JOIN
+        (SELECT job_industry.job_id, array_agg(industry.name) as industries
+        FROM job_industry
+        INNER JOIN industry
+        ON industry.id = job_industry.industry_id
+        GROUP BY job_industry.job_id) sub_i
+    ON job.id = sub_i.job_id
+    WHERE ({value} IS NULL OR job.id = {value});
     """
     
     
@@ -230,6 +251,35 @@ class PGHandler:
                             
                         #print("Transaction Completed Successfully!")
                         return True
+    
+    @classmethod
+    def select_job(cls, job_id=None):
+        """
+        Executes a SQL transaction to select a specific job's data
+        Inputs:  Integer job id to be selected
+                 NOTE: Will default to extracting ALL job data
+        Outputs: Dictionary of key-value pairs corresponding to columns in the 'jobs' table
+                 NOTE: Will also include information from the 'industry' and 'function' tables as lists
+                 e.g. key='industries', value=['Industry1', 'Industry2' ...]
+        """
+        
+        if cls.connection is None:
+            print("Connection to Postgres database has not been established! Call PGHandler.init_connection()")
+            return "Connection Failed"
+        else:
+            with cls.connection: # pylint: disable=not-context-manager
+                # We use the RealDictCursor parameter to ensure the db data is in the form of a dict
+                with cls.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                    
+                    # Build and execute query to get job data from database
+                    query_select = sql.SQL(cls.text_select_all_data_query).format(
+                        value = sql.Placeholder()
+                        )
+                    cur.execute(query_select, (job_id, job_id))
+                    
+                    job_data = cur.fetchone()
+                    
+                    return job_data
         
         
     @classmethod

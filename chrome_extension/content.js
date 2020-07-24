@@ -48,37 +48,4 @@ function alertComplete(status) {
         alert("Error! Job posting " + status.id + alertText + " Details below:\n" + status.error_msg);
     }
 
-    // switch(status.instruction) {
-
-    //     case "POST":
-    //         if (status.status === 'SUCCESS'){
-    //             alertText += " extracted to server."
-    //             alert("Success! Job posting " + status.id + " extracted to server.");
-    //         }
-    //         if (status.status === 'FAILURE'){
-    //             alertText += " could not be sent to server."
-    //             alert("Error! Job posting " + status.id + " could not be sent to server. Details below:\n" 
-    //                   + status.error_msg);
-    //         }
-    //         break;
-
-    //     case "GET":
-    //         if (status.status === 'SUCCESS'){
-    //             alert("Success! Job posting " + status.id + " retrieved from server.");
-    //         }
-    //         if (status.status === 'FAILURE'){
-    //             alert("Error! Job posting " + status.id + " could not be retrieved from server. Details below:\n" 
-    //                   + status.error_msg);
-    //         }
-    //         break;
-    // }
-
-
-    // if (status.status === 'SUCCESS'){
-    //     alert("Success! Job posting " + status.id + " received by server.");
-    // }
-    // if (status.status === 'FAILURE'){
-    //     alert("Error! Job posting " + status.id + " could not be received by server. Details below:\n" 
-    //           + status.error_msg);
-    // }
 }

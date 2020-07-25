@@ -1,5 +1,5 @@
 # Flask
-from flask import Flask, request, abort
+from flask import Flask, request, abort, make_response, jsonify
 from flask_restful import Api, Resource, reqparse, fields, marshal
 # Utility 
 import os
@@ -10,16 +10,9 @@ from collections import defaultdict
 from html_processor import JobData
 from postgres_handler import PGHandler
 
-# Define custom errors before initializing the app
-errors = {
-    'JobAlreadyExistsError': {
-        'message': "A job with that id already exists in the database.",
-        'status': 409,
-    }
-}
 
 app = Flask(__name__)
-api = Api(app, errors=errors)
+api = Api(app)
 
 # Define the fields to be yielded during GET requests
 job_fields = {
@@ -70,7 +63,7 @@ class JobListAPI(Resource):
         if PGHandler.insert_job(current_job.data):
             return {'job': marshal(current_job.data, job_fields)}, 201
         else:
-            return {'job': marshal(current_job.data, job_fields)}, 409
+            abort(409)
         
         
         # Close connection to database
@@ -90,7 +83,7 @@ class JobAPI(Resource):
         
         
     def get(self, id):
-        
+                    
         # Initialize connection to Postgres database
         # NOTE: Connection parameters must be specified in the 'database.ini' file
         PGHandler.init_connection()
@@ -99,9 +92,9 @@ class JobAPI(Resource):
         selected_job = PGHandler.select_job(id)
         
         if selected_job == "Connection Failed":
-            return 504
+            abort(504)
         elif selected_job is None:
-            return {"Job not found in database!"}, 404
+            abort(404)
         else:
             return {'job': marshal(selected_job, job_fields)}, 200
         
@@ -119,4 +112,6 @@ if __name__ == '__main__':
 
 # TODO:
 # Implement connection pooling
-# Implement GET functionality for all jobs
+# Implement GET functionality for all jobs (downloadable csv?)
+# Figure out how to package app using docker
+# Update documentation and release

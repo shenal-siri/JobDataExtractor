@@ -48,7 +48,8 @@ function fetchFromServer(request, message, sendResponse) {
         // CHECK - Throw error if fetch fails or error code is not in 200 range
         .then(function(response) {
         if (!response.ok) {
-            throw Error(response.status);
+            let errorString = response.status + " - " + response.statusText;
+            throw Error(errorString);
         }
         // Read in the response as JSON
         return response.json();

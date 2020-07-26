@@ -1,4 +1,11 @@
 // Wire up the buttons in popup.html to the appropriate functions
+// "Extract Job Posting"
+document.addEventListener("DOMContentLoaded", function(event) {
+    var extractPageButton = document.getElementById("extractWebpage");
+    extractPageButton.onclick = function() { startExtract(); }
+});
+
+// "Retrieve Job Posting"
 document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('ok_btn').addEventListener('click', function() { 
         var inputJobID = document.getElementById('job_id_input')
@@ -8,10 +15,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 });
 
+// "Download ALL Job Postings"
 document.addEventListener("DOMContentLoaded", function(event) {
-    var getPageButton = document.getElementById("extractWebpage");
-    getPageButton.onclick = function() { startExtract(); }
+    var getAllButton = document.getElementById("downloadAllJobs");
+    getAllButton.onclick = function() { startGETAll(); }
 });
+
 
 // Regex pattern to check URLs against
 // Matches URLs like: http[s]://[...]linkedin.com/jobs/view/[...]
@@ -47,6 +56,13 @@ function startGET(current_id) {
     });
 }
 
+// Send a message containing only the instruction to extract all jobs
+// No callback - this message kickstarts the eventual GET request to the server
+function startGETAll() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
+        chrome.tabs.sendMessage(tab[0].id, {instruction: 'startGetAllRequest'} );
+    });
+}
 
 
 /*

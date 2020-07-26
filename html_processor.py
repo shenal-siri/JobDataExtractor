@@ -16,11 +16,11 @@ class JobData:
     DATA_FIELDS = ['id', 'url', 'title', 'company', 'location', 'seniority', 
                    'industries', 'employment_type', 'functions', 'posting_text']
     
-    # job_posting_data is a dict recevied from the Chrome extension consisting of the 'id' and 'HTML' fields
-    def __init__(self, job_posting_data, fields=DATA_FIELDS):
+    # job_input_data is a dict recevied from the Chrome extension consisting of the 'id' and 'HTML' fields
+    def __init__(self, job_input_data, fields=DATA_FIELDS):
         self.data = dict.fromkeys(fields)
-        self.html = job_posting_data['html']
-        self.data['id'] = job_posting_data['id']
+        self.html = job_input_data['html']
+        self.data['id'] = job_input_data['id']
         self.data['url'] = "https://www.linkedin.com/jobs/view/" + str(self.data['id']) + "/"
         
     

@@ -36,6 +36,20 @@ chrome.runtime.onMessage.addListener(
             fetchFromServer(request, msg, sendResponse);
         }
 
+        if (msg.instruction === 'GETALL') {
+
+            // Compile endpoint for GET (all jobs) request
+            let endpoint = hostUrl + "/jobs/"
+
+            // Create our request constructor with all the parameters we need
+            var request = new Request(endpoint, {
+                method: 'GET'
+            });
+
+            // Initiate GET request through fetch function
+            fetchFromServer(request, msg, sendResponse);
+        }
+
         return true; // Needed to ensure message is async
     }
 )
@@ -57,11 +71,21 @@ function fetchFromServer(request, message, sendResponse) {
         // OK - Output response and trigger callback to content.js
         .then(function(responseAsJson) {
         console.log(responseAsJson);
-        sendResponse({ 
-            instruction: message.instruction, 
-            status: 'SUCCESS', 
-            id: responseAsJson.job.id 
-        });
+        // Format response and actions based on expected response type
+        if (message.instruction == 'POST' || message.instruction == 'GET'){
+            sendResponse({ 
+                instruction: message.instruction, 
+                status: 'SUCCESS', 
+                id: responseAsJson.job.id 
+            });
+        }
+        if (message.instruction == 'GETALL'){
+            sendResponse({ 
+                instruction: message.instruction, 
+                status: 'SUCCESS'
+            })
+            downloadJobList(responseAsJson);
+        }
         })
         // BAD - Output error and trigger callback to content.js
         .catch(function(error) {
@@ -73,4 +97,18 @@ function fetchFromServer(request, message, sendResponse) {
             error_msg: error.toString() 
         });
         });
+}
+
+
+// Function to download list of jobs from database as JSON. Implemented from this SO post: 
+// https://stackoverflow.com/questions/38833178/using-google-chrome-extensions-to-import-export-json-files
+function downloadJobList(jobArray){
+    var _jobArray = JSON.stringify(jobArray, null, 4); //indentation in json format, human readable
+    var vLink = document.createElement('a'),
+    vBlob = new Blob([_jobArray], {type: "octet/stream"}),
+    vName = 'JobDataExtractor_AllPostings.json',
+    vUrl = window.URL.createObjectURL(vBlob);
+    vLink.setAttribute('href', vUrl);
+    vLink.setAttribute('download', vName);
+    vLink.click();
 }

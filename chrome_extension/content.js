@@ -17,12 +17,18 @@ chrome.runtime.onMessage.addListener(
         // Has a callback - user alert message
         chrome.runtime.sendMessage({instruction: 'GET', id: msg.job_id}, alertComplete);
     }
+    if (msg.instruction === 'startGetAllRequest') {
+        // Send a message to the background script for GET ALL from server
+        // Has a callback - user alert message
+        chrome.runtime.sendMessage({instruction: 'GETALL'}, alertComplete);
+    }
 });
 
 
 // Display alert message to user on successful/failed request to server
 function alertComplete(status) {
     let alertText = ''
+    var display_id = status.id
 
     if (status.status === 'SUCCESS'){
         switch(status.instruction){
@@ -32,8 +38,12 @@ function alertComplete(status) {
             case 'GET':
                 alertText += " retrieved from server.";
                 break;
+            case 'GETALL':
+                alertText += "list retrieved from server.";
+                display_id = ''
+                break;
         }
-        alert("Success! Job posting " + status.id + alertText);
+        alert("Success! Job posting " + display_id + alertText);
     }
 
     if (status.status === 'FAILURE'){
@@ -44,8 +54,11 @@ function alertComplete(status) {
             case 'GET':
                 alertText += " could not be retrieved from server.";
                 break;
+            case 'GETALL':
+                alertText += "list could not be retrieved from server.";
+                break;
         }
-        alert("Error! Job posting " + status.id + alertText + " Details below:\n" + status.error_msg);
+        alert("Error! Job posting " + display_id + alertText + " Details below:\n" + status.error_msg);
     }
 
 }

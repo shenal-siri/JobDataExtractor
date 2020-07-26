@@ -277,7 +277,10 @@ class PGHandler:
                         )
                     cur.execute(query_select, (job_id, job_id))
                     
-                    job_data = cur.fetchone()
+                    if job_id is None:
+                        job_data = cur.fetchall()
+                    else:
+                        job_data = cur.fetchone()
                     
                     return job_data
         

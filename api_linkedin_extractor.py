@@ -42,6 +42,27 @@ class JobListAPI(Resource):
                                    help='No HTML provided',
                                    location='json')
         super(JobListAPI, self).__init__()
+        
+        
+    def get(self):
+        # Initialize connection to Postgres database
+        # NOTE: Connection parameters must be specified in the 'database.ini' file
+        PGHandler.init_connection()
+        
+        # Select data for all jobs (no id passed) from the Postgres database and store to appropriate dict
+        job_list = PGHandler.select_job()
+        
+        if job_list == "Connection Failed":
+            abort(504)
+        elif job_list is None:
+            abort(404)
+        else:
+            return {'job_list': [marshal(job, job_fields) for job in job_list]}, 200
+        
+        
+        # Close connection to database
+        PGHandler.connection.close()
+    
 
     def post(self):
         # Assign the id and HTML received from the Chrome Extension into a JobData object
@@ -50,7 +71,7 @@ class JobListAPI(Resource):
             'id': args['id'],
             'html': args['HTML']
         }
-        current_job = JobData(job_posting_data=job_args)
+        current_job = JobData(job_input_data=job_args)
         
         # Have the JobData object extract the relevant data fields from the raw HTML
         current_job.extract_job_data()
@@ -83,7 +104,6 @@ class JobAPI(Resource):
         
         
     def get(self, id):
-                    
         # Initialize connection to Postgres database
         # NOTE: Connection parameters must be specified in the 'database.ini' file
         PGHandler.init_connection()

@@ -1,10 +1,10 @@
 # Reference matrial: https://www.psycopg.org/docs/sql.html
-import sys
+import copy
+from contextlib import contextmanager
 # Psycopg2
 import psycopg2
 import psycopg2.extras
-from psycopg2 import Error, sql
-from postgres_config import pg_config
+from psycopg2 import Error, sql, pool
 
 class PGHandler:
     """
@@ -13,6 +13,7 @@ class PGHandler:
     It also stores a connection to the database once initialized, as well as pre-defined query strings.
     """
     connection = None
+    connection_pool = None
     
     # Query strings used to build queries safely
     
@@ -62,24 +63,40 @@ class PGHandler:
     
     
     @classmethod
-    def init_connection(cls):
+    def init_connection_pool(cls, connect_args):
         """
-        Initialize a Postgres database connection
-        Inputs:  Database connection arguments
-        Outputs: PGHandler.connection attribute (or print error message)
+        Initialize a Postgres database connection pool
+        Inputs:  Dict of database connection parameters (set via database.ini file)
+        Outputs: PGHandler.connection_pool class attribute (or print error message)
         """
         try:
-            # Read connection config from database.ini file and connect to database
-            params = pg_config()
-            cls.connection = psycopg2.connect(**params)
+            cls.connection_pool = pool.SimpleConnectionPool(1, 5, **connect_args)
             
         except psycopg2.DatabaseError as error:
-            print(f'Error {error}')
-            sys.exit(1)
+            print(f"Error {error}")
+            return None
+    
+    
+    @classmethod    
+    @contextmanager
+    def get_cursor(cls):
+        """
+        Context manager to retrieve a connection from the connection_pool and yield a cursor for use
+        Outputs: RealDictCursor to be used in transactions to postgres db
+                 On exit, commits transaction and returns connection to connection_pool
+        """
+        con = cls.connection_pool.getconn()
+        try:
+            yield con.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        finally:
+            # Transaction is commited at the finally clause to ensure that changes to the database are 
+            # made only when the entire set of SQL queries comprising a single API call is completed
+            con.commit()
+            cls.connection_pool.putconn(con)
     
     
     @classmethod
-    def insert_job(cls, job_data):
+    def insert_job(cls, input_job_data):
         """
         Execute a SQL transaction to insert a new job listing into the database
         Inputs:  Dictionary of key-value pairs corresponding to columns in the 'jobs' table
@@ -87,11 +104,15 @@ class PGHandler:
         """
         
         # Check if job already exists, cancel transaction if it does
-        if cls.check_job_exists(job_data):
-            print("Job id: {} already exists in database, insert transaction cancelled".format(job_data['id']))
+        if cls.check_job_exists(input_job_data):
+            print("Job id: {} already exists in database, insert transaction cancelled"
+                  .format(input_job_data['id']))
             return False
         
-        # Separate many-to-many fields from extracted job_data
+        # Deepcopy to avoid modifying the instantiated JobData.data attribute
+        job_data = copy.deepcopy(input_job_data)
+        
+        # Separate the many-to-many fields from the extracted job_data
         junc_data = {'industry': job_data.pop('industries'),
                      'function': job_data.pop('functions')}
         
@@ -101,76 +122,76 @@ class PGHandler:
         
         job_fields, job_values = zip(*job_data.items())
         
-        # Create cursor
-        if cls.connection is None:
-            print("Connection to Postgres database has not been established! Call PGHandler.init_connection()")
+         
+        # Check connection
+        if cls.connection_pool is None:
+            print(""" Connection to Postgres database has not been established! 
+                  Call PGHandler.init_connection_pool()""")
         else:
-            with cls.connection: # pylint: disable=not-context-manager
-                with cls.connection.cursor() as cur:
+            with cls.get_cursor() as cur:
+                
+                # Get job id and insert job into database
+                job_id = int(job_data['id'])
+                
+                # Build and execute query for insertion into job table
+                query_insert['job'] = sql.SQL(cls.text_insert_query).format(
+                    table = sql.Identifier('job'),
+                    fields = sql.SQL(",").join(map(sql.Identifier, job_fields)),
+                    values = sql.SQL(",").join(sql.Placeholder() * len(job_fields)),
+                    pkey = sql.Identifier('id')
+                    )
+                
+                cur.execute(query_insert['job'], job_values)
+                
+                # Loop through each of the multi-value tables and fields
+                for table, values in junc_data.items():
                     
-                    # Get job id and insert job into database
-                    job_id = int(job_data['id'])
+                    junc_ids = ['job_id', table+'_id']
                     
-                    # Build and execute query for insertion into job table
-                    query_insert['job'] = sql.SQL(cls.text_insert_query).format(
-                        table = sql.Identifier('job'),
-                        fields = sql.SQL(",").join(map(sql.Identifier, job_fields)),
-                        values = sql.SQL(",").join(sql.Placeholder() * len(job_fields)),
-                        pkey = sql.Identifier('id')
-                        )
+                    # Build queries for industry / function table insertion and selection
+                    query_insert[table] = sql.SQL(cls.text_insert_query).format(
+                    table = sql.Identifier(table),
+                    fields = sql.Identifier('name'),
+                    values = sql.Placeholder(),
+                    pkey = sql.Identifier('name')
+                    )
                     
-                    cur.execute(query_insert['job'], job_values)
+                    query_select[table] = sql.SQL(cls.text_select_query).format(
+                    table = sql.Identifier(table),
+                    field = sql.Identifier('id'),
+                    field_where = sql.Identifier('name'),
+                    value = sql.Placeholder()
+                    )
                     
-                    # Loop through each of the multi-value tables and fields
-                    for table, values in junc_data.items():
-                        
-                        junc_ids = ['job_id', table+'_id']
-                        
-                        # Build queries for industry / function table insertion and selection
-                        query_insert[table] = sql.SQL(cls.text_insert_query).format(
-                        table = sql.Identifier(table),
-                        fields = sql.Identifier('name'),
-                        values = sql.Placeholder(),
-                        pkey = sql.Identifier('name')
-                        )
-                        
-                        query_select[table] = sql.SQL(cls.text_select_query).format(
-                        table = sql.Identifier(table),
-                        field = sql.Identifier('id'),
-                        field_where = sql.Identifier('name'),
-                        value = sql.Placeholder()
-                        )
-                        
-                        # Build query for insertion to junction tables
-                        query_insert['job_'+table] = sql.SQL(cls.text_insert_query).format(
-                        table = sql.Identifier('job_'+table),
-                        fields = sql.SQL(",").join(sql.Identifier(n) for n in junc_ids),
-                        values = sql.SQL(",").join(sql.Placeholder() * len(junc_ids)),
-                        pkey = sql.SQL(",").join(sql.Identifier(n) for n in junc_ids),
-                        )
-                        
-                        # Check if industry / function item is None
-                        if values is None:
+                    # Build query for insertion to junction tables
+                    query_insert['job_'+table] = sql.SQL(cls.text_insert_query).format(
+                    table = sql.Identifier('job_'+table),
+                    fields = sql.SQL(",").join(sql.Identifier(n) for n in junc_ids),
+                    values = sql.SQL(",").join(sql.Placeholder() * len(junc_ids)),
+                    pkey = sql.SQL(",").join(sql.Identifier(n) for n in junc_ids),
+                    )
+                    
+                    # Check if industry / function item is None
+                    if values is None:
 
-                            # Directly add to the appropriate junction table using the default 'NULL' row
-                            # (i.e, industry_id = 1 / function_id = 1; see DDL_job_data.sql)
-                            cur.execute(query_insert['job_'+table], (job_id, 1))
+                        # Directly add to the appropriate junction table using the default 'NULL' row
+                        # (i.e, industry_id = 1 / function_id = 1; see DDL_job_data.sql)
+                        cur.execute(query_insert['job_'+table], (job_id, 1))
+                    
+                    else:
+                        # Loop through each industry / function item
+                        for value in values:
+                            
+                            # Insert industry / function item into database (DO NOTHING if already exists)
+                            cur.execute(query_insert[table], (value,))
                         
-                        else:
-                            # Loop through each industry / function item
-                            for value in values:
-                                
-                                # Insert industry / function item into database
-                                cur.execute(query_insert[table], (value,))
+                            # Get auto-assigned industry_id / function_id from database
+                            cur.execute(query_select[table], (value,))
+                            current_id = cur.fetchone()['id']
                             
-                                # Get auto-assigned industry_id / function_id from database
-                                cur.execute(query_select[table], (value,))
-                                current_id = cur.fetchone()[0]
-                                
-                                # Insert new row to job_industry / job_function junction tables
-                                cur.execute(query_insert['job_'+table], (job_id, current_id))
+                            # Insert new row to job_industry / job_function junction tables
+                            cur.execute(query_insert['job_'+table], (job_id, current_id))
                             
-        #print("Transaction Completed Successfully!")
         return True
     
     
@@ -184,31 +205,28 @@ class PGHandler:
         """
         job_id = int(job_data['id'])
         
-        if cls.connection is None:
-            print("Connection to Postgres database has not been established! Call PGHandler.init_connection()")
+        if cls.connection_pool is None:
+            print(""" Connection to Postgres database has not been established! 
+                  Call PGHandler.init_connection_pool()""")
         else:
-            with cls.connection: # pylint: disable=not-context-manager
-                with cls.connection.cursor() as cur:
+            with cls.get_cursor() as cur:
+                
+                # Build and execute query for insertion into job table
+                query_select = sql.SQL(cls.text_select_query).format(
+                    table = sql.Identifier('job'),
+                    field = sql.Identifier('id'),
+                    field_where = sql.Identifier('id'),
+                    value = sql.Placeholder()
+                    )
+                cur.execute(query_select, (job_id,))
+                
+                if cur.fetchone() is None:
+                    if show_result: print("Job id: {} NOT IN database".format(job_id))
+                    return False
+                else:
+                    if show_result: print("Job id: {} FOUND IN database".format(job_id))
+                    return True
                     
-                    # Build and execute query for insertion into job table
-                    query_select = sql.SQL(cls.text_select_query).format(
-                        table = sql.Identifier('job'),
-                        field = sql.Identifier('id'),
-                        field_where = sql.Identifier('id'),
-                        value = sql.Placeholder()
-                        )
-                    cur.execute(query_select, (job_id,))
-                    
-                    if cur.fetchone() is None:
-                        if show_result: print("Job id: {} NOT IN database".format(job_id))
-                        return False
-                    else:
-                        if show_result: print("Job id: {} FOUND IN database".format(job_id))
-                        return True
-                    
-        #print("Transaction Completed Successfully!")
-    
-    
     
     @classmethod
     def update_rejected(cls, job_title, job_company):
@@ -218,39 +236,39 @@ class PGHandler:
         Outputs: Boolean True if Transaction committed successfully, False if job not found / commit failed
         """
         
-        if cls.connection is None:
-            print("Connection to Postgres database has not been established! Call PGHandler.init_connection()")
+        if cls.connection_pool is None:
+            print(""" Connection to Postgres database has not been established! 
+                  Call PGHandler.init_connection_pool()""")
         else:
-            with cls.connection: # pylint: disable=not-context-manager
-                with cls.connection.cursor() as cur:
-        
-                    # Build and execute query to check if job exists in table
-                    query_select = sql.SQL(cls.text_select_from_title_company).format(
-                        field = sql.Identifier('id'),
+            with cls.get_cursor() as cur:
+    
+                # Build and execute query to check if job exists in table
+                query_select = sql.SQL(cls.text_select_from_title_company).format(
+                    field = sql.Identifier('id'),
+                    table = sql.Identifier('job'),
+                    title = sql.Placeholder(), 
+                    company = sql.Placeholder()
+                    )
+                cur.execute(query_select, (job_title, job_company))
+                
+                job_id = cur.fetchone()
+                
+                if job_id is None:
+                    print("Job not found in database")
+                    return False
+                else:
+                    # Build and execute query to update job listing
+                    query_update = sql.SQL(cls.text_update_query).format(
                         table = sql.Identifier('job'),
-                        title = sql.Placeholder(), 
-                        company = sql.Placeholder()
+                        field = sql.Identifier('rejected'),
+                        value = sql.Placeholder(),
+                        field_where = sql.Identifier('id'), 
+                        value_where = sql.Placeholder()
                         )
-                    cur.execute(query_select, (job_title, job_company))
-                    
-                    job_id = cur.fetchone()
-                    
-                    if job_id is None:
-                        print("Job not found in database")
-                        return False
-                    else:
-                        # Build and execute query to update job listing
-                        query_update = sql.SQL(cls.text_update_query).format(
-                            table = sql.Identifier('job'),
-                            field = sql.Identifier('rejected'),
-                            value = sql.Placeholder(),
-                            field_where = sql.Identifier('id'), 
-                            value_where = sql.Placeholder()
-                            )
-                        cur.execute(query_update, (True, job_id))
-                            
-                        #print("Transaction Completed Successfully!")
-                        return True
+                    cur.execute(query_update, (True, job_id))
+                        
+                    #print("Transaction Completed Successfully!")
+                    return True
     
     @classmethod
     def select_job(cls, job_id=None):
@@ -263,26 +281,25 @@ class PGHandler:
                  e.g. key='industries', value=['Industry1', 'Industry2' ...]
         """
         
-        if cls.connection is None:
-            print("Connection to Postgres database has not been established! Call PGHandler.init_connection()")
+        if cls.connection_pool is None:
+            print(""" Connection to Postgres database has not been established! 
+                  Call PGHandler.init_connection_pool()""")
             return "Connection Failed"
         else:
-            with cls.connection: # pylint: disable=not-context-manager
-                # We use the RealDictCursor parameter to ensure the db data is in the form of a dict
-                with cls.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-                    
-                    # Build and execute query to get job data from database
-                    query_select = sql.SQL(cls.text_select_all_data_query).format(
-                        value = sql.Placeholder()
-                        )
-                    cur.execute(query_select, (job_id, job_id))
-                    
-                    if job_id is None:
-                        job_data = cur.fetchall()
-                    else:
-                        job_data = cur.fetchone()
-                    
-                    return job_data
+            with cls.get_cursor() as cur:
+                
+                # Build and execute query to get job data from database
+                query_select = sql.SQL(cls.text_select_all_data_query).format(
+                    value = sql.Placeholder()
+                    )
+                cur.execute(query_select, (job_id, job_id))
+                
+                if job_id is None:
+                    job_data = cur.fetchall()
+                else:
+                    job_data = cur.fetchone()
+                
+                return job_data
         
         
     @classmethod

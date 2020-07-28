@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener(
 
             // Compile data and endpoint for POST request
             let data = JSON.stringify({id: msg.id, HTML: msg.HTML})
-            let endpoint = hostUrl + "/jobs"
+            let endpoint = hostUrl + "/jobs/"
 
             // Create our request constructor with all the parameters we need
             var request = new Request(endpoint, {

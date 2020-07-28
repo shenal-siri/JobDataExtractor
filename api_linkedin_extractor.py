@@ -9,6 +9,7 @@ from collections import defaultdict
 # Custom modules
 from html_processor import JobData
 from postgres_handler import PGHandler
+from postgres_config import pg_config
 
 
 app = Flask(__name__)
@@ -29,6 +30,11 @@ job_fields = {
     'uri': fields.Url('job')
 }
 
+# Initialize a connection pool to the Postgres database
+# NOTE: Connection parameters must be specified in the 'database.ini' file
+db_connect_params = pg_config()
+PGHandler.init_connection_pool(db_connect_params)
+
 
 class JobListAPI(Resource):
     
@@ -44,11 +50,7 @@ class JobListAPI(Resource):
         super(JobListAPI, self).__init__()
         
         
-    def get(self):
-        # Initialize connection to Postgres database
-        # NOTE: Connection parameters must be specified in the 'database.ini' file
-        PGHandler.init_connection()
-        
+    def get(self):   
         # Select data for all jobs (no id passed) from the Postgres database and store to appropriate dict
         job_list = PGHandler.select_job()
         
@@ -59,9 +61,6 @@ class JobListAPI(Resource):
         else:
             return {'job_list': [marshal(job, job_fields) for job in job_list]}, 200
         
-        
-        # Close connection to database
-        PGHandler.connection.close()
     
 
     def post(self):
@@ -76,19 +75,11 @@ class JobListAPI(Resource):
         # Have the JobData object extract the relevant data fields from the raw HTML
         current_job.extract_job_data()
         
-        # Initialize connection to Postgres database
-        # NOTE: Connection parameters must be specified in the 'database.ini' file
-        PGHandler.init_connection()
-        
         # Commit extracted data to the Postgres database and return HTML code
         if PGHandler.insert_job(current_job.data):
             return {'job': marshal(current_job.data, job_fields)}, 201
         else:
             abort(409)
-        
-        
-        # Close connection to database
-        PGHandler.connection.close()
 
 
 class JobAPI(Resource):
@@ -104,10 +95,6 @@ class JobAPI(Resource):
         
         
     def get(self, id):
-        # Initialize connection to Postgres database
-        # NOTE: Connection parameters must be specified in the 'database.ini' file
-        PGHandler.init_connection()
-        
         # Select data for the specific job id from the Postgres database and store to appropriate dict
         selected_job = PGHandler.select_job(id)
         
@@ -119,10 +106,6 @@ class JobAPI(Resource):
             return {'job': marshal(selected_job, job_fields)}, 200
         
         
-        # Close connection to database
-        PGHandler.connection.close()
-        
-
 api.add_resource(JobListAPI, '/jobdataextractor/api/v1.0/jobs/', endpoint = 'jobs')
 api.add_resource(JobAPI, '/jobdataextractor/api/v1.0/jobs/<int:id>', endpoint = 'job')
 
@@ -130,8 +113,7 @@ api.add_resource(JobAPI, '/jobdataextractor/api/v1.0/jobs/<int:id>', endpoint = 
 if __name__ == '__main__':
     app.run(debug=True)
 
+
 # TODO:
-# Implement connection pooling
-# Implement GET functionality for all jobs (downloadable csv?)
 # Figure out how to package app using docker
 # Update documentation and release

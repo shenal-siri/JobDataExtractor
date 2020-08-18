@@ -34,7 +34,33 @@ job_fields = {
 # NOTE: Connection parameters must be specified in the 'database.ini' file
 db_connect_params = pg_config()
 PGHandler.init_connection_pool(db_connect_params)
+print("API is ready to accept requests!")
 
+
+def attempt_connection(connection_parameters):
+    """
+    Attempts to connect to the postgres database, if the connection has not been established already
+    """
+    if PGHandler.connection_status == False:
+        try:
+            PGHandler.init_connection_pool(connection_parameters)
+        except Exception as error:
+            print(str(error))
+            abort(504)
+
+
+@app.route("/")
+def hello():
+    return "Hello World from Flask inside Docker!"
+
+@app.route("/jobdataextractor/api/v1.0/checkconnection/", methods=['GET'])
+def checkconnect():
+    return "Current connection status is: " + str(PGHandler.connection_status)
+
+@app.route("/jobdataextractor/api/v1.0/attemptconnection/", methods=['GET'])
+def attemptconnect():
+    PGHandler.init_connection_pool(db_connect_params)
+    return "Current connection status is: " + str(PGHandler.connection_status)
 
 class JobListAPI(Resource):
     
@@ -50,11 +76,14 @@ class JobListAPI(Resource):
         super(JobListAPI, self).__init__()
         
         
-    def get(self):   
+    def get(self):
+        # Verify connection, exit if failed
+        attempt_connection(db_connect_params)
+           
         # Select data for all jobs (no id passed) from the Postgres database and store to appropriate dict
         job_list = PGHandler.select_job()
         
-        if job_list == "Connection Failed":
+        if job_list == False:
             abort(504)
         elif job_list is None:
             abort(404)
@@ -64,6 +93,9 @@ class JobListAPI(Resource):
     
 
     def post(self):
+        # Verify connection, exit if failed
+        attempt_connection(db_connect_params)
+        
         # Assign the id and HTML received from the Chrome Extension into a JobData object
         args = self.reqparse.parse_args()
         job_args = {
@@ -95,6 +127,9 @@ class JobAPI(Resource):
         
         
     def get(self, id):
+        # Verify connection, exit if failed
+        attempt_connection(db_connect_params)
+        
         # Select data for the specific job id from the Postgres database and store to appropriate dict
         selected_job = PGHandler.select_job(id)
         
@@ -115,5 +150,4 @@ if __name__ == '__main__':
 
 
 # TODO:
-# Figure out how to package app using docker
 # Update documentation and release

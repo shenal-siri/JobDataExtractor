@@ -1,5 +1,9 @@
 /* Run these DDL statements inside an empty Postgres database */
 
+-- CREATE USER docker WITH PASSWORD 'dockerpass';
+-- CREATE DATABASE job_data;
+-- GRANT ALL PRIVILEGES ON DATABASE job_data TO docker;
+
 CREATE TABLE job (
     id serial PRIMARY KEY,
     url varchar NOT NULL,

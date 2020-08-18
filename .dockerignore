@@ -1,0 +1,9 @@
+.git
+.vscode
+.__local_only__
+.__pycache__
+chrome_extension
+html_files
+resources
+.gitattributes
+.gitignore

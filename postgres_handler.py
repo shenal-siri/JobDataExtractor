@@ -12,7 +12,7 @@ class PGHandler:
     to the tables in the job_helper Postgres database.
     It also stores a connection to the database once initialized, as well as pre-defined query strings.
     """
-    connection = None
+    connection_status = False
     connection_pool = None
     
     # Query strings used to build queries safely
@@ -71,10 +71,11 @@ class PGHandler:
         """
         try:
             cls.connection_pool = pool.SimpleConnectionPool(1, 5, **connect_args)
+            cls.connection_status = True
             
         except psycopg2.DatabaseError as error:
-            print(f"Error {error}")
-            return None
+            error_msg = f"Error: {error}"
+            return error_msg
     
     
     @classmethod    
@@ -124,7 +125,7 @@ class PGHandler:
         
          
         # Check connection
-        if cls.connection_pool is None:
+        if cls.connection_status == False:
             print(""" Connection to Postgres database has not been established! 
                   Call PGHandler.init_connection_pool()""")
         else:
@@ -205,7 +206,7 @@ class PGHandler:
         """
         job_id = int(job_data['id'])
         
-        if cls.connection_pool is None:
+        if cls.connection_pool == False:
             print(""" Connection to Postgres database has not been established! 
                   Call PGHandler.init_connection_pool()""")
         else:
@@ -236,7 +237,7 @@ class PGHandler:
         Outputs: Boolean True if Transaction committed successfully, False if job not found / commit failed
         """
         
-        if cls.connection_pool is None:
+        if cls.connection_status == False:
             print(""" Connection to Postgres database has not been established! 
                   Call PGHandler.init_connection_pool()""")
         else:
@@ -266,8 +267,6 @@ class PGHandler:
                         value_where = sql.Placeholder()
                         )
                     cur.execute(query_update, (True, job_id))
-                        
-                    #print("Transaction Completed Successfully!")
                     return True
     
     @classmethod
@@ -281,10 +280,10 @@ class PGHandler:
                  e.g. key='industries', value=['Industry1', 'Industry2' ...]
         """
         
-        if cls.connection_pool is None:
+        if cls.connection_pool == False:
             print(""" Connection to Postgres database has not been established! 
                   Call PGHandler.init_connection_pool()""")
-            return "Connection Failed"
+            return cls.connection_pool
         else:
             with cls.get_cursor() as cur:
                 
@@ -309,6 +308,3 @@ class PGHandler:
         """
         pass
         
-
-    
-    

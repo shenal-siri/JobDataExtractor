@@ -1,10 +1,15 @@
 # Reference matrial: https://www.psycopg.org/docs/sql.html
+# Utility
+import os
+from dotenv import load_dotenv, find_dotenv
 import copy
 from contextlib import contextmanager
 # Psycopg2
 import psycopg2
 import psycopg2.extras
 from psycopg2 import Error, sql, pool
+
+
 
 class PGHandler:
     """
@@ -63,14 +68,29 @@ class PGHandler:
     
     
     @classmethod
-    def init_connection_pool(cls, connect_args):
+    def init_connection_pool(cls):
         """
         Initialize a Postgres database connection pool
-        Inputs:  Dict of database connection parameters (set via database.ini file)
+        Inputs:  Requires the following environment variables to be set in the .env file:
+                 POSTGRES_HOST
+                 POSTGRES_USER
+                 POSTGRES_PASSWORD
+                 POSTGRES_DB
         Outputs: PGHandler.connection_pool class attribute (or print error message)
         """
+        load_dotenv(find_dotenv())
+        # db_connect_params = { 
+        #                      'host': os.environ.get("POSTGRES_HOST"),
+        #                      'user': os.environ.get("POSTGRES_USER"),
+        #                      'password': os.environ.get("POSTGRES_PASSWORD"),
+        #                      'dbname': os.environ.get("POSTGRES_DB")
+        #                     }
         try:
-            cls.connection_pool = pool.SimpleConnectionPool(1, 5, **connect_args)
+            cls.connection_pool = pool.SimpleConnectionPool(1, 5, 
+                                                            host = os.environ.get("POSTGRES_HOST"),
+                                                            user = os.environ.get("POSTGRES_USER"),
+                                                            password = os.environ.get("POSTGRES_PASSWORD"),
+                                                            dbname = os.environ.get("POSTGRES_DB"))
             cls.connection_status = True
             
         except psycopg2.DatabaseError as error:
@@ -206,7 +226,7 @@ class PGHandler:
         """
         job_id = int(job_data['id'])
         
-        if cls.connection_pool == False:
+        if cls.connection_status == False:
             print(""" Connection to Postgres database has not been established! 
                   Call PGHandler.init_connection_pool()""")
         else:
@@ -280,10 +300,9 @@ class PGHandler:
                  e.g. key='industries', value=['Industry1', 'Industry2' ...]
         """
         
-        if cls.connection_pool == False:
+        if cls.connection_status == False:
             print(""" Connection to Postgres database has not been established! 
                   Call PGHandler.init_connection_pool()""")
-            return cls.connection_pool
         else:
             with cls.get_cursor() as cur:
                 

@@ -21,11 +21,8 @@ services:
         volumes:
             - ./DDL_job_data.sql:/docker-entrypoint-initdb.d/DDL_job_data.sql
             - ./data_postgres:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_USER=docker
-            - POSTGRES_PASSWORD=dockerpass
-            - POSTGRES_DB=job_data
-            - POSTGRES_HOST=localhost
+        env_file:
+            - ./.env
         ports:
             - 5432:5432
 

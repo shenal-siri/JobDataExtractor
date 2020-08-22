@@ -1,11 +1,6 @@
 # Flask
 from flask import Flask, request, abort, make_response, jsonify
 from flask_restful import Api, Resource, reqparse, fields, marshal
-# Utility 
-import os
-import shutil
-import sys
-from collections import defaultdict
 # Custom modules
 from html_processor import JobData
 from postgres_handler import PGHandler
@@ -32,18 +27,18 @@ job_fields = {
 
 # Initialize a connection pool to the Postgres database
 # NOTE: Connection parameters must be specified in the 'database.ini' file
-db_connect_params = pg_config()
-PGHandler.init_connection_pool(db_connect_params)
+# db_connect_params = pg_config()
+PGHandler.init_connection_pool()
 print("API is ready to accept requests!")
 
 
-def attempt_connection(connection_parameters):
+def attempt_connection():
     """
     Attempts to connect to the postgres database, if the connection has not been established already
     """
     if PGHandler.connection_status == False:
         try:
-            PGHandler.init_connection_pool(connection_parameters)
+            PGHandler.init_connection_pool()
         except Exception as error:
             print(str(error))
             abort(504)
@@ -59,7 +54,7 @@ def checkconnect():
 
 @app.route("/jobdataextractor/api/v1.0/attemptconnection/", methods=['GET'])
 def attemptconnect():
-    PGHandler.init_connection_pool(db_connect_params)
+    PGHandler.init_connection_pool()
     return "Current connection status is: " + str(PGHandler.connection_status)
 
 class JobListAPI(Resource):
@@ -78,7 +73,7 @@ class JobListAPI(Resource):
         
     def get(self):
         # Verify connection, exit if failed
-        attempt_connection(db_connect_params)
+        attempt_connection()
            
         # Select data for all jobs (no id passed) from the Postgres database and store to appropriate dict
         job_list = PGHandler.select_job()
@@ -94,7 +89,7 @@ class JobListAPI(Resource):
 
     def post(self):
         # Verify connection, exit if failed
-        attempt_connection(db_connect_params)
+        attempt_connection()
         
         # Assign the id and HTML received from the Chrome Extension into a JobData object
         args = self.reqparse.parse_args()
@@ -128,7 +123,7 @@ class JobAPI(Resource):
         
     def get(self, id):
         # Verify connection, exit if failed
-        attempt_connection(db_connect_params)
+        attempt_connection()
         
         # Select data for the specific job id from the Postgres database and store to appropriate dict
         selected_job = PGHandler.select_job(id)

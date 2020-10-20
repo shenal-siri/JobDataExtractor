@@ -48,16 +48,21 @@ Pretty self-explanatory, see the image below.
 
 #### 2. Install the Chrome Extension
 - On a Chrome tab, navigate to *chrome://extensions/*
+
 ![Chrome - Extensions Page](/resources/readme_setup_2_01.PNG "Chrome - Extensions Page")
 
 - Enable 'Developer mode'.
+
 ![Chrome - Developer Mode](/resources/readme_setup_2_02.PNG "Chrome - Developer Mode")
 
 - Select 'Load unpacked' and select the 'chrome_extension' folder from your local repo.
+
 ![Chrome - Load Unpacked](/resources/readme_setup_2_03.PNG "Chrome - Load Unpacked")
+
 ![Chrome - Select Folder](/resources/readme_setup_2_04.PNG "Chrome - Select Folder")
 
 - The extension should now be installed and ready to use. You can pin it to your extensions toolbar for ease of use.
+
 ![Chrome - Installed Extension](/resources/readme_setup_2_05.PNG "Chrome - Installed Extension")
 
 #### 3. Build and Run the Docker Containers
@@ -65,20 +70,24 @@ Pretty self-explanatory, see the image below.
 - Open up the terminal of your choice and navigate to the repo's top-level directory. 
 - Run the following command (or any variant)
 `docker-compose up --build --force-recreate -d`
-- Wait for the containers to spin up. If this is the first time running, Docker will have to build the app image from the ground-up, so expect this to take some time.
-- Docker Desktop has a dashboard which allows you to view logs and container status. 
+- Wait for the containers to spin up completely. If this is the first time running, Docker will have to build the app image from the ground-up, so expect this to take some time.
+    - Docker Desktop has a dashboard which allows you to view logs and container status.
+    - You can also use the `/checkconnection` and `/tryconnection` API endpoints to determine connection status (see [API Reference](#api-reference) below).
 
 ## Done! Now how do I use this tool?
 
 1. Navigate to any LinkedIn job posting page (i.e. url begins with `https://www.linkedin.com/jobs/view/`)
 
 2. Click the pinned extension and select 'Extract Job Posting'
+
 ![Extension - Extract Posting](/resources/readme_usage_2_01.PNG "Extension - Extract Posting")
 
 3. You should receive a Chrome alert if your job posting was successfuly extracted and stored in the database.
+
 ![Extension - Success Alert](/resources/readme_usage_3_01.PNG "Extension - Success Alert")
 
 4. You can retrieve a job posting by its id ('Retrieve Job Posting') or download a JSON file of all the job posting data currently in the database ('Download ALL Job Postings').
+
 ![Extension - Success Alert](/resources/readme_usage_4_01.PNG "Extension - Success Alert")
 
 
@@ -94,18 +103,18 @@ Pretty self-explanatory, see the image below.
 
 ## Potential / Future Work
 
-- ~~Wrapping this up into a rudimentary web app (or even custom Chrome Extension) would be an interesting foray into basic web development tools and technologies~~ **- Implemented**
+- [x] Wrapping this up into a rudimentary web app (or even custom Chrome Extension) would be an interesting foray into basic web development tools and technologies **- Implemented**
 
-- Scraping data's no fun unless you use it! We can load our data into a `pandas` dataframe and go to town with some EDA to extract insights (For example: Which skills are most commonly requested in job postings?) **- Priority: High - In Progress**
+- [ ] Scraping data's no fun unless you use it! We can load our data into a `pandas` dataframe and go to town with some EDA to extract insights (For example: Which skills are most commonly requested in job postings?) **- Priority: High - In Progress**
 
-- Adding additional usability features for querying / modifying job postings in the database (flagging jobs as 'rejected', querying using fields other than through job id, etc.) **- Priority: High**
+- [ ] Adding additional usability features for querying / modifying job postings in the database (flagging jobs as 'rejected', querying using fields other than through job id, etc.) **- Priority: High**
 
-- Explore the creation of an interactive dashboard à la Tableau or Power BI (Plotly Dash might be promising, if it can connect to a database for live visualizations) **- Priority: Medium**.
+- [ ] Explore the creation of an interactive dashboard à la Tableau or Power BI (Plotly Dash might be promising, if it can connect to a database for live visualizations) **- Priority: Medium**.
 
 
-- LinkedIn is just one of many job posting aggregators, how about other common options (Indeed, Glassdoor, Monster etc)? **- Priority: Low**
+- [ ] LinkedIn is just one of many job posting aggregators, how about other common options (Indeed, Glassdoor, Monster etc)? **- Priority: Low**
 
-- This tool only stores data on jobs I apply to. Can this be expanded to a suite of different tools which make the overall job application process easier? (Eg: Auto-filling applications on company web portals? Setting up notifications for companies I actively wish to apply to?) **- Priority: Low**
+- [ ] This tool only stores data on jobs I apply to. Can this be expanded to a suite of different tools which make the overall job application process easier? (Eg: Auto-filling applications on company web portals? Setting up notifications for companies I actively wish to apply to?) **- Priority: Low**
 
 
 ## File Index

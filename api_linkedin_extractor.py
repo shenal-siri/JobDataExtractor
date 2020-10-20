@@ -26,15 +26,14 @@ job_fields = {
 }
 
 # Initialize a connection pool to the Postgres database
-# NOTE: Connection parameters must be specified in the 'database.ini' file
-# db_connect_params = pg_config()
+# NOTE: Connection parameters must be specified in the .env file
 PGHandler.init_connection_pool()
 print("API is ready to accept requests!")
 
 
 def attempt_connection():
     """
-    Attempts to connect to the postgres database, if the connection has not been established already
+    Attempts to connect to the postgres database if the connection has not been established already
     """
     if PGHandler.connection_status == False:
         try:
@@ -52,8 +51,8 @@ def hello():
 def checkconnect():
     return "Current connection status is: " + str(PGHandler.connection_status)
 
-@app.route("/jobdataextractor/api/v1.0/attemptconnection/", methods=['GET'])
-def attemptconnect():
+@app.route("/jobdataextractor/api/v1.0/tryconnection/", methods=['GET'])
+def tryconnect():
     PGHandler.init_connection_pool()
     return "Current connection status is: " + str(PGHandler.connection_status)
 
@@ -145,4 +144,4 @@ if __name__ == '__main__':
 
 
 # TODO:
-# Update documentation and release
+# Update documentation and push to repo

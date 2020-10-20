@@ -110,8 +110,8 @@ class PGHandler:
         try:
             yield con.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         finally:
-            # Transaction is commited at the finally clause to ensure that changes to the database are 
-            # made only when the entire set of SQL queries comprising a single API call is completed
+            # Transaction is committed at the finally clause to ensure that changes to the database are 
+            # committed only when the entire set of SQL queries comprising a single API call is completed
             con.commit()
             cls.connection_pool.putconn(con)
     
@@ -247,7 +247,38 @@ class PGHandler:
                 else:
                     if show_result: print("Job id: {} FOUND IN database".format(job_id))
                     return True
-                    
+            
+    
+    @classmethod
+    def select_job(cls, job_id=None):
+        """
+        Executes a SQL transaction to select a specific job's data
+        Inputs:  Integer job id to be selected
+                 NOTE: Will default to extracting ALL job data
+        Outputs: Dictionary of key-value pairs corresponding to columns in the 'jobs' table
+                 NOTE: Will also include information from the 'industry' and 'function' tables as lists
+                 e.g. key='industries', value=['Industry1', 'Industry2' ...]
+        """
+        
+        if cls.connection_status == False:
+            print(""" Connection to Postgres database has not been established! 
+                  Call PGHandler.init_connection_pool()""")
+        else:
+            with cls.get_cursor() as cur:
+                
+                # Build and execute query to get job data from database
+                query_select = sql.SQL(cls.text_select_all_data_query).format(
+                    value = sql.Placeholder()
+                    )
+                cur.execute(query_select, (job_id, job_id))
+                
+                if job_id is None:
+                    job_data = cur.fetchall()
+                else:
+                    job_data = cur.fetchone()
+                
+                return job_data
+    
     
     @classmethod
     def update_rejected(cls, job_title, job_company):
@@ -287,38 +318,8 @@ class PGHandler:
                         value_where = sql.Placeholder()
                         )
                     cur.execute(query_update, (True, job_id))
-                    return True
+                    return True    
     
-    @classmethod
-    def select_job(cls, job_id=None):
-        """
-        Executes a SQL transaction to select a specific job's data
-        Inputs:  Integer job id to be selected
-                 NOTE: Will default to extracting ALL job data
-        Outputs: Dictionary of key-value pairs corresponding to columns in the 'jobs' table
-                 NOTE: Will also include information from the 'industry' and 'function' tables as lists
-                 e.g. key='industries', value=['Industry1', 'Industry2' ...]
-        """
-        
-        if cls.connection_status == False:
-            print(""" Connection to Postgres database has not been established! 
-                  Call PGHandler.init_connection_pool()""")
-        else:
-            with cls.get_cursor() as cur:
-                
-                # Build and execute query to get job data from database
-                query_select = sql.SQL(cls.text_select_all_data_query).format(
-                    value = sql.Placeholder()
-                    )
-                cur.execute(query_select, (job_id, job_id))
-                
-                if job_id is None:
-                    job_data = cur.fetchall()
-                else:
-                    job_data = cur.fetchone()
-                
-                return job_data
-        
         
     @classmethod
     def delete_job(cls):

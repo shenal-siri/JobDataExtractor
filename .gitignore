@@ -3,4 +3,3 @@ __pycache__/
 .vscode/
 html_files/
 data_postgres/
-database.ini

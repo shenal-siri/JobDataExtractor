@@ -49,12 +49,12 @@ def hello():
 
 @app.route("/jobdataextractor/api/v1.0/checkconnection/", methods=['GET'])
 def checkconnect():
-    return "Current connection status is: " + str(PGHandler.connection_status)
+    return "Current connection status to database is: " + str(PGHandler.connection_status)
 
 @app.route("/jobdataextractor/api/v1.0/tryconnection/", methods=['GET'])
 def tryconnect():
     PGHandler.init_connection_pool()
-    return "Current connection status is: " + str(PGHandler.connection_status)
+    return "Current connection status to database is: " + str(PGHandler.connection_status)
 
 class JobListAPI(Resource):
     

@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "Job Data Extractor",
+    "version": "2.0.0",
+    "description": "Extracts information from a LinkedIn job posting webpage",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_title": "Extracts information from a LinkedIn job posting webpage"
+    },
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+    }],
+    "permissions": [
+        "tabs", 
+        "http://localhost:5000/jobdataextractor/api/v1.0/*/"
+    ]
+}

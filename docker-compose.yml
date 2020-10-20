@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+
+    app:
+        container_name: api_flask
+        build: .
+        ports:
+            - 5000:5000
+        working_dir: /app
+        depends_on: 
+            - db
+        command: ["./wait-for-it.sh", "db:5432", "-t", "0", "--", "python", "api_gevent_server.py"]
+        # This command waits until `db:5432` responds (5432 is default PostgreSQL port)
+        # then runs our application by this command: `python app.py`
+        # command: ["./docker-wait-for-pg.sh", "db", "python", "api_gevent_server.py"]
+
+    db:
+        container_name: db_postgres
+        image: postgres:12.3
+        volumes:
+            - ./DDL_job_data.sql:/docker-entrypoint-initdb.d/DDL_job_data.sql
+            - ./data_postgres:/var/lib/postgresql/data
+        env_file:
+            - ./.env
+        ports:
+            - 5432:5432
+
+volumes:
+    data_postgres:

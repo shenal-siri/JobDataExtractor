@@ -1,7 +1,11 @@
 /* Run these DDL statements inside an empty Postgres database */
 
+-- CREATE USER docker WITH PASSWORD 'dockerpass';
+-- CREATE DATABASE job_data;
+-- GRANT ALL PRIVILEGES ON DATABASE job_data TO docker;
+
 CREATE TABLE job (
-    id serial PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     url varchar NOT NULL,
     title varchar NOT NULL,
     company varchar NOT NULL,
@@ -25,13 +29,13 @@ CREATE TABLE function (
 );
 
 CREATE TABLE job_industry(
-    job_id int REFERENCES job(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    job_id bigint REFERENCES job(id) ON UPDATE CASCADE ON DELETE CASCADE,
     industry_id int REFERENCES industry(id) ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT job_industry_pkey PRIMARY KEY (job_id, industry_id)
 );
 
 CREATE TABLE job_function(
-    job_id int REFERENCES job(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    job_id bigint REFERENCES job(id) ON UPDATE CASCADE ON DELETE CASCADE,
     function_id int REFERENCES function(id) ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT job_function_pkey PRIMARY KEY (job_id, function_id)
 );

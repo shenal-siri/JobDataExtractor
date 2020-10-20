@@ -14,60 +14,44 @@ class JobData:
     # NOTE: 'rejected' boolean field is not extracted and defaults to 'false' when committing
     # a job to the db (see DDL_job_data.sql)
     DATA_FIELDS = ['id', 'url', 'title', 'company', 'location', 'seniority', 
-                       'industries', 'employment_type', 'functions', 'posting_text']
+                   'industries', 'employment_type', 'functions', 'posting_text']
     
-    def __init__(self, fields=DATA_FIELDS):
+    # job_input_data is a dict recevied from the Chrome extension consisting of the 'id' and 'HTML' fields
+    def __init__(self, job_input_data, fields=DATA_FIELDS):
         self.data = dict.fromkeys(fields)
-        self.filepath = None
-    
-    
-    def process_text(self, text, ignore_first=False, return_as_string=False):
-        """ Utility function used in extract_job_data()
-        Input:  Raw text extracted from a BS4 tag object (i.e: tag.text)
-        Output: Either:
-                - (Default) A list of strings, itemized by newlines
-                - A single string of text, concatenated with ". "
-        """
-        text_list = [x.strip() for x in text.splitlines()]
-        text_list = list(filter(bool, text_list))
+        self.html = job_input_data['html']
+        self.data['id'] = job_input_data['id']
+        self.data['url'] = "https://www.linkedin.com/jobs/view/" + str(self.data['id']) + "/"
         
-        if ignore_first:
-            text_list = text_list[1:]
-        
-        if return_as_string:
-            return ". ".join(text_list)
-        else:
-            return text_list
     
-    
-    def extract_job_data(self, filename, foldername):
+    def extract_job_data(self):
         """
-        Input:  Filepath to a LinkedIn HTML job posting
-        Output: self.data dict populated with relevant job data
+        Input:  HTML content of a LinkedIn job posting
+        Output: self.data dict populated with relevant job data (as Strings or lists of Strings)
         """
-        # Read in the target HTML file
-        with open(self.filepath, 'r', encoding='utf-8') as rf:
-            html_corpus = rf.read()
+        # # Read in the target HTML file
+        # with open(self.filepath, 'r', encoding='utf-8') as rf:
+        #     html_corpus = rf.read()
 
         # Create BS4 soup object    
-        soup = BeautifulSoup(html_corpus, 'html.parser')
+        soup = BeautifulSoup(self.html, 'html.parser')
 
         # Extract all comment tags from the main soup object
-        comments = soup.find_all(string=lambda text: isinstance(text, Comment))
+        # comments = soup.find_all(string=lambda text: isinstance(text, Comment))
 
         # Get the first comment and extract the url and 10-digit id information from it
-        self.data['url'] = comments[0][22:].strip()
-        self.data['id'] = comments[0][-12:-2].strip()
+        # self.data['url'] = comments[0][22:].strip()
+        # self.data['id'] = comments[0][-12:-2].strip()
 
         # Find the div tag inside the main article tag which contatins the job posting text
         posting_text_tag = soup.find('article').find_all('div', {'id': 'job-details'})
         
         # Extract job posting text from the tag
-        self.data['posting_text']  = self.process_text(posting_text_tag[0].get_text(separator=' '), 
-                                                       return_as_string=True)
+        self.data['posting_text'] = self.process_text(posting_text_tag[0].get_text(separator=' '), 
+                                                      return_as_string=True)
         
         
-        # Find the div tags inside the main article tag which contatins additional job details
+        # Find the div tags inside the main article tag which contain the additional job details
         detail_tags = soup.find('article').find_all("div", {"class": "jobs-box__group"})
         
         # Parse through each tag and store data in an auxiliary dict
@@ -113,6 +97,25 @@ class JobData:
         company_location_list = self.process_text(tag_target.find('h3').text)
         self.data['company'] = company_location_list[1]
         self.data['location'] = company_location_list[3]
+    
+    
+    def process_text(self, text, ignore_first=False, return_as_string=False):
+        """ Utility function used in extract_job_data()
+        Input:  Raw text extracted from a BS4 tag object (i.e: tag.text)
+        Output: Either:
+                - (Default) A list of strings, itemized by newlines
+                - A single string of text, concatenated with ". "
+        """
+        text_list = [x.strip() for x in text.splitlines()]
+        text_list = list(filter(bool, text_list))
+        
+        if ignore_first:
+            text_list = text_list[1:]
+        
+        if return_as_string:
+            return ". ".join(text_list)
+        else:
+            return text_list
         
         
     def reset_job_data(self, fields=DATA_FIELDS):

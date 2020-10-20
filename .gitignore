@@ -1,5 +1,5 @@
-_local_only/
+__local_only__/
 __pycache__/
 .vscode/
 html_files/
-database.ini
+data_postgres/

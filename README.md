@@ -23,7 +23,7 @@ As mentioned, the app is Dockerized for compatibility, with separate containers 
 
 The database itself is stored as a volume on the local machine, so the db persists even if the containers are restarted / removed (the volume is mounted via the 'data_postgres' folder created in your local repo after running `docker-compose` for the first time).
 
-![Dockerized App Schema](/resources/docker_architecture.png "Dockerized App Schema")
+![Dockerized App Schema](/resources/Docker_Architecture.png "Dockerized App Schema")
 
 The database schema / ERD is summarized below:
 
